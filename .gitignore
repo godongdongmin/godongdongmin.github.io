@@ -1,1 +1,19 @@
 files/*draft*.pdf
+*draft*.pdf
+_build/
+output/
+__pycache__/
+*.pyc
+*.aux
+*.log
+*.out
+.DS_Store
+Thumbs.db
+.env
+.env.*
+
+# Folder structure is shared; uploaded reference materials stay on this PC.
+inbox/**
+!inbox/**/
+!inbox/**/.gitkeep
+!inbox/README.md

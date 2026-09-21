@@ -1,0 +1,116 @@
+{
+  "name": "Dongmin Go",
+  "name_ko": "고동민",
+  "github": "godongdongmin",
+  "email": "ckwlgns90@gmail.com",
+  "website": "https://godongdongmin.github.io/",
+  "headline": "Pro, HUROTICS",
+  "profile_affiliation": "M.S. in Mechanical Engineering, Chung-Ang University",
+  "summary": "I currently work at HUROTICS. I received my M.S. in Mechanical Engineering from Chung-Ang University, where I worked in the Assistive and Rehabilitation Robotics Lab under the supervision of Prof. Giuk Lee. Previously, I was an Equipment Engineer in the Memory Business of Samsung Electronics' Device Solutions (DS) Division, responsible for EUV lithography equipment. I also received my B.S. in Mechanical Engineering from Chung-Ang University.",
+  "research_interests": [],
+  "education": [
+    {
+      "institution": "Chung-Ang University",
+      "degree": "M.S. in Mechanical Engineering",
+      "dates": "2024 - 2025",
+      "details": [
+        "GPA: 4.37 / 4.50",
+        "Assistive and Rehabilitation Robotics Lab",
+        "Advisor: Prof. Giuk Lee",
+        "Master's thesis: [T.1]"
+      ],
+      "url": "https://www.cau.ac.kr/"
+    },
+    {
+      "institution": "Chung-Ang University",
+      "degree": "B.S. in Mechanical Engineering",
+      "dates": "2015 - 2021",
+      "details": [
+        "GPA: 3.82 / 4.50"
+      ],
+      "url": "https://www.cau.ac.kr/"
+    }
+  ],
+  "experience": [
+    {
+      "institution": "HUROTICS",
+      "role": "Pro",
+      "role_ko": "프로",
+      "dates": "Mar. 2026 - Present",
+      "details": []
+    },
+    {
+      "institution": "Samsung Electronics",
+      "role": "Equipment Engineer, Memory Business, Device Solutions (DS) Division",
+      "dates": "2022 - 2023",
+      "details": [
+        "Responsible for EUV lithography equipment"
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "label": "J.1",
+      "title": "Reducing Personalization Time and Energy Cost While Walking Outdoors with a Portable Exosuit",
+      "authors": "Kimoon Nam, Saikat Sahoo, Yoosun Kim, Dongmin Go, Jeongho Choo, Cheonkyu Park, Seungtae Yang, and Giuk Lee",
+      "venue": "Advanced Robotics Research",
+      "citation_details": "vol. 2, no. 1, e202400027, 2026 (first published online June 29, 2025)",
+      "year": "2026",
+      "url": "https://doi.org/10.1002/adrr.202400027"
+    },
+    {
+      "label": "C.1",
+      "title": "Domain Generalization for Subject-Independent Walking Locomotion Mode Classification Using Wearable Sensors",
+      "authors": "Dongmin Go and Giuk Lee",
+      "venue": "KSME Bioengineering Division Spring Conference, Abstract Book",
+      "citation_details": "p. 113, May 2025",
+      "year": "2025",
+      "url": "https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12266823"
+    },
+    {
+      "label": "T.1",
+      "title": "Synergistic Myomimetic Control of Exosuit via Unified-Critic Reinforcement Learning",
+      "authors": "Dongmin Go",
+      "venue": "Master's thesis, Mechanical Engineering, Chung-Ang University",
+      "citation_details": "2025",
+      "year": "2025"
+    }
+  ],
+  "manuscripts": [
+    {
+      "title": "Myomimetic Exosuit Assistance Across Terrains via Unified-Critic Reinforcement Learning",
+      "label": "W.1",
+      "status": "Work in progress; not yet submitted",
+      "relation": "Journal extension of master's thesis [T.1].",
+      "thesis_title": "Synergistic Myomimetic Control of Exosuit via Unified-Critic Reinforcement Learning",
+      "authors": "Dongmin Go, Insu Choi, Kyeongmin Lim, Sejong Lee, and Giuk Lee",
+      "venue": "",
+      "url": "research/myomimetic-exosuit/index.html",
+      "thumbnail": "assets/myomimetic-poster.jpg",
+      "description": "Unified-critic multi-agent reinforcement learning for three walking environments, with sensor-history-based control and hardware validation.",
+      "video_url": "files/myomimetic-exosuit-video.mp4"
+    }
+  ],
+  "projects": [],
+  "awards": [
+    {
+      "title": "Excellence Award",
+      "title_ko": "우수상",
+      "event": "2020 LINC+ Capstone Design Award",
+      "organization": "Chung-Ang University LINC+",
+      "date": "Jan. 7, 2021",
+      "date_iso": "2021-01-07"
+    },
+    {
+      "title": "Dean's Award, College of Engineering",
+      "title_ko": "공과대학장상",
+      "event": "2019 CAU Engineering Academic Festival",
+      "organization": "Chung-Ang University",
+      "date": "Nov. 29, 2019",
+      "date_iso": "2019-11-29"
+    }
+  ],
+  "skills": [],
+  "languages": [],
+  "updated": "September 2026"
+}
