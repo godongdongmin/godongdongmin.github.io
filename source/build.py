@@ -6,7 +6,6 @@ Requires Python 3 and XeLaTeX; uses the Python standard library only.
 from pathlib import Path
 import html
 import json
-import re
 import shutil
 import subprocess
 import sys
@@ -47,23 +46,15 @@ def detail_list(details):
 def section(name, body, ident=None):
     return f'<section class="section" id="{ident or name.lower()}"><h2>{h(name)}</h2>{body}</section>'
 
-timeline_items = []
-for e in P['education']:
-    timeline_items.append({'category':'Education', 'dates':e['dates'], 'title':e['institution'], 'subtitle':e['degree'], 'details':e['details']})
-for e in P['experience']:
-    timeline_items.append({'category':'Experience', 'dates':e['dates'], 'title':e['institution'], 'subtitle':e.get('homepage_role',e['role']), 'details':e['details']})
-for a in P['awards']:
-    timeline_items.append({'category':'Honor & Award', 'dates':a['date'], 'title':a['title'], 'subtitle':a['event'], 'details':[a['organization']]})
+def background_entry(title, subtitle, dates, details):
+    detail_text = ''.join(f'<p class="detail">{h(d)}</p>' for d in details)
+    return f'<article class="entry background-entry"><h3>{h(title)}</h3><p>{h(subtitle)}</p>{detail_text}<p class="background-date">{h(dates)}</p></article>'
 
-def timeline_year(item):
-    # Ongoing work first; completed activities by end year. No month is inferred.
-    return 9999 if 'Present' in item['dates'] else max(int(y) for y in re.findall(r'\b\d{4}\b',item['dates']))
-
-timeline = '<ol class="timeline">'
-for item in sorted(timeline_items,key=timeline_year,reverse=True):
-    details = ''.join(f'<p class="detail">{h(d)}</p>' for d in item['details'])
-    timeline += f'<li class="timeline-item"><div class="timeline-date">{h(item["dates"])}</div><article class="entry timeline-body"><p class="timeline-category">{h(item["category"])}</p><h3>{h(item["title"])}</h3><p>{h(item["subtitle"])}</p>{details}</article></li>'
-timeline += '</ol>'
+# Keep each category separate, in the latest-first order stored in profile.json.
+education = ''.join(background_entry(e['institution'], e['degree'], e['dates'], e['details']) for e in P['education'])
+experience = ''.join(background_entry(e['institution'], e.get('homepage_role', e['role']), e['dates'], e['details']) for e in P['experience'])
+awards = ''.join(background_entry(a['title'], a['event'], a['date'], [a['organization']]) for a in P['awards'])
+background = '<div class="background-grid" id="background">' + section('Education', education, 'education') + '<div class="background-right">' + section('Experience', experience, 'experience') + section('Honors & Awards', awards, 'awards') + '</div></div>'
 publications = ''
 for pub in P['publications']:
     title = h(pub['title'])
@@ -85,7 +76,7 @@ interest_sentence = P.get('homepage_interest_statement','')
 native_name = f'<span class="native-name" lang="ko">{h(P["name_ko"])}</span>' if P.get('name_ko') else ''
 intro = f'<section class="section intro" id="about"><h2>About Me</h2><p>{h(P["summary"])} {h(interest_sentence)}</p><p>{h(P.get("background",""))}</p><a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
 publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · W = Work in progress</p>'
-content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + section('Background',timeline,'background')
+content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + background
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])} at HUROTICS. M.S. in Mechanical Engineering, Chung-Ang University; former EUV Equipment Engineer at Samsung Electronics DS.">
