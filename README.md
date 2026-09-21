@@ -32,6 +32,7 @@ CV는 Times New Roman이 설치되어 있으면 사용하고, 없으면 TeX Gyre
 | `assets/style.css` | 웹사이트 스타일 원본 |
 | `assets/portrait.jpg` | 공개 프로필 사진 |
 | `assets/myomimetic-poster.jpg` | 공개 영상 포스터 |
+| `assets/myomimetic-exosuit/` | 연구 상세 페이지의 공개 그림 8개 (PNG) |
 | `files/myomimetic-exosuit-video.mp4` | 공개 연구 영상 |
 | `inbox/` | 수정에 참고할 자료를 넣는 로컬 작업 공간 |
 | `_build/`, `output/` | 생성된 중간 파일과 배포 ZIP; Git에서 제외 |

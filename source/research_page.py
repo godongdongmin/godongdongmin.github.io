@@ -1,6 +1,23 @@
 """Static project page for the supplied manuscript and supplementary video."""
 from html import escape as h
 
+RESEARCH_FIGURES = {
+    'system': (2000, 778),
+    'networks': (2000, 908),
+    'setup': (2000, 990),
+    'critic_ablation_1col': (2000, 1905),
+    'layer2_effort_1col': (2000, 1461),
+    'layer3_GM_1col': (1537, 2000),
+    'sim_effort_1col': (1727, 2000),
+    'layer3_scatter_1col': (2000, 1500),
+}
+
+def research_figure(name, alt, caption, compact=False):
+    width, height = RESEARCH_FIGURES[name]
+    src = f'../../assets/myomimetic-exosuit/{name}.png'
+    classes = 'study-figure figure-compact' if compact else 'study-figure'
+    return f'<figure class="{classes}"><a href="{src}" target="_blank" rel="noopener" aria-label="{h(alt)} — open full-size image"><img src="{src}" alt="{h(alt)}" width="{width}" height="{height}" decoding="async"></a><figcaption>{h(caption)}</figcaption></figure>'
+
 def site_navigation(active, home_url, research_url):
     links = ''.join(
         f'<a href="{h(url)}"'+(' aria-current="page"' if key == active else '')+f'>{label}</a>'
@@ -46,8 +63,22 @@ def build_research_page(site, profile, manuscript):
 {site_navigation('research','../../index.html','../index.html')}
 <main class="project-main" id="main"><header class="project-header"><p class="eyebrow">MANUSCRIPT IN PREPARATION</p><h1>{h(manuscript['title'])}</h1><p class="project-authors">{authors}</p><p class="project-affiliations">Chung-Ang University · HUROTICS</p></header>
 <section class="section" id="overview"><h2>Overview</h2>{thesis_note}<p>This study investigates how a shared critic shapes coordination between a simulated musculoskeletal model and a bilateral hip-extension exosuit. Both policies learn in a coupled physical environment, while only the exosuit policy is deployed on the real device.</p><p>The framework covers level walking, incline walking, and stair ascent without reference-motion tracking. On hardware, the controller uses IMU and past-action histories, without requiring terrain labels or muscle-state measurements.</p>
+{research_figure('system', 'System overview linking coupled musculoskeletal simulation to exosuit deployment across level walking, incline walking, and stair ascent.', 'System overview. Muscle and exosuit policies learn together in simulation; the exosuit policy is then deployed and evaluated across three terrains.')}
+<p class="figure-hint">Select any figure to view it at full resolution.</p>
 <div class="method-grid"><article><h3>Joint learning</h3><p>Centralized training with a unified critic and decentralized execution. A matched-actor, matched-reward comparison evaluates an independent-critic alternative.</p></article><article><h3>Embedded control</h3><p>Policy inference at 50 Hz on a Jetson Orin Nano. Force commands travel over CAN to the robot's 1 kHz low-level controller.</p></article><article><h3>Hardware evaluation</h3><p>Two reward variants, BASE and TGT, are compared with motor-off assistance in seven healthy participants across three environments.</p></article></div></section>
+<section class="section" id="architecture"><h2>Network Architecture</h2><p>The muscle and exosuit policies share a unified critic during training. The exosuit policy combines long and short histories of IMU observations and past actions, and the same policy is shared between the left and right sides.</p>
+{research_figure('networks', 'Muscle policy, unified critic, and shared bilateral exosuit policy with a dual-history encoder and hardware deployment pathway.', 'Network architecture. The exosuit policy uses 2 s and 80 ms histories; only this policy is transferred to hardware, followed by filtering and force scaling.')}</section>
+<section class="section" id="experimental-setup"><h2>Experimental Setup</h2><p>The wearable system combines an onboard inference computer, inertial sensors, and force sensing. EMG electrodes record activity from seven lower-limb muscles during the hardware evaluation.</p>
+{research_figure('setup', 'Exosuit hardware configuration and EMG electrode placement for GM, RF, VL, BF, TA, MG, and SOL.', 'Experimental setup. Left: robot components and sensor locations. Right: EMG electrode placement; the GM electrode is hidden by clothing.')}</section>
 <section class="section" id="video"><h2>Supplementary Video</h2><video class="project-video" controls playsinline preload="metadata" poster="../../assets/myomimetic-poster.jpg" aria-describedby="video-description"><source src="../../files/myomimetic-exosuit-video.mp4" type="video/mp4">Your browser does not support embedded video. <a href="../../files/myomimetic-exosuit-video.mp4">Download the video</a>.</video><p class="media-caption" id="video-description">1 min 49 sec · Device configuration, policy inputs, the training and deployment framework, and a deployed test session. The video includes on-screen explanatory text.</p></section>
-<section class="section" id="results"><h2>Selected Findings</h2><p class="section-note">Results reported in the current draft.</p><div class="results-wrap"><table class="results-table"><caption>Architecture and hardware comparisons</caption><thead><tr><th scope="col">Evaluation</th><th scope="col">Reported result</th></tr></thead><tbody><tr><th scope="row">Bilateral positive-work difference in simulation</th><td>4–14% with a unified critic; 22–49% with independent critics.</td></tr><tr><th scope="row">EMG-derived aggregate effort versus motor-off</th><td>15.5% reduction with BASE; 19.1% with TGT, across seven participants and three environments.</td></tr><tr><th scope="row">Simulated–measured response direction</th><td>Agreement in 11/21 muscle–terrain combinations with BASE and 17/21 with TGT.</td></tr></tbody></table></div><p class="result-context">Both policies reduced aggregate effort relative to motor-off. The BASE–TGT difference in this measure was not statistically significant. These are EMG-derived muscle-effort results, not measurements of metabolic energy expenditure.</p></section>
+<section class="section" id="results"><h2>Selected Findings</h2><p class="section-note">Results reported in the current draft.</p>
+<article class="finding" id="bilateral-work"><h3>Bilateral positive-work difference in simulation</h3><p class="finding-summary">Bilateral positive-work differences were <strong>4–14% with a unified critic</strong>, compared with <strong>22–49% with independent critics</strong>.</p>
+{research_figure('critic_ablation_1col', 'Unified versus independent critics: bilateral exosuit force profiles and positive-work differences across three terrains.', 'Critic ablation. Panel (a) compares right and left assistance-force profiles; panel (b) compares positive work. Solid and dashed lines distinguish the two sides.', compact=True)}</article>
+<article class="finding" id="measured-effort"><h3>EMG-derived aggregate effort versus motor-off</h3><p class="finding-summary">Across seven participants and three environments, aggregate effort decreased by <strong>15.5% with BASE</strong> and <strong>19.1% with TGT</strong> relative to motor-off.</p><p class="result-context">Both policies reduced aggregate effort relative to motor-off. The BASE–TGT difference in this measure was not statistically significant. These are EMG-derived muscle-effort results, not measurements of metabolic energy expenditure.</p>
+<div class="figure-pair">{research_figure('layer2_effort_1col', 'Measured normalized muscle effort for OFF, BASE, and TGT, pooled across terrains and separated by terrain, with seven participant traces.', 'Aggregate effort. Pooled and terrain-specific comparisons of OFF, BASE, and TGT, with individual participant responses.')}
+{research_figure('layer3_GM_1col', 'Measured and simulated gluteus maximus activation profiles and waveform overlap for OFF versus BASE and OFF versus TGT.', 'GM waveform comparison. Measured and simulated gluteus maximus activation and waveform overlap provide a muscle-specific view alongside the aggregate effort result.')}</div></article>
+<article class="finding" id="response-direction"><h3>Simulated–measured response direction</h3><p class="finding-summary">Simulated and measured changes agreed in direction for <strong>11/21 muscle–terrain combinations with BASE</strong> and <strong>17/21 with TGT</strong>.</p>
+<div class="figure-pair">{research_figure('sim_effort_1col', 'Simulated gluteus maximus activation and normalized muscle effort for OFF, BASE, and TGT across level, incline, and stair ascent.', 'Simulation results. GM activation profiles and normalized muscle effort across the three terrains provide context for the simulated responses.')}
+{research_figure('layer3_scatter_1col', 'Scatter plots comparing simulated and measured percentage changes, with same-sign agreement of 11 out of 21 for BASE and 17 out of 21 for TGT.', 'Simulation versus measurement. Each point represents a muscle–terrain combination; the plots compare the direction and magnitude of change from motor-off.')}</div></article></section>
 </main><footer class="footer"><a href="../../index.html">← Back to homepage</a><span>{h(profile['name'])} · {h(profile['updated'])}</span></footer></body></html>'''
     (dest/'index.html').write_text(page,encoding='utf-8')

@@ -60,6 +60,7 @@ try{
       await delay(100);
     }
     await call('Runtime.evaluate',{expression:'document.fonts.ready.then(()=>true)',awaitPromise:true,returnByValue:true});
+    await call('Runtime.evaluate',{expression:'Promise.all([...document.images].map(img=>img.decode())).then(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))',awaitPromise:true,returnByValue:true});
     const inspection=await call('Runtime.evaluate',{expression:`JSON.stringify({width:innerWidth,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,brokenImages:[...document.images].filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src),headings:[...document.querySelectorAll('h1,h2')].map(e=>e.textContent),overflow:[...document.querySelectorAll('main,aside,nav,article,p,h1,h2,h3')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).map(e=>e.tagName+': '+e.textContent.slice(0,70))})`,returnByValue:true});
     const audit={name,...JSON.parse(inspection.result.value)};
     const navigation=await call('Runtime.evaluate',{expression:`JSON.stringify({links:[...document.querySelectorAll('nav a')].map(a=>({text:a.textContent,href:a.getAttribute('href')})),active:document.querySelector('nav [aria-current="page"]')?.textContent,videos:document.querySelectorAll('video').length})`,returnByValue:true});

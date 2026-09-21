@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import sys
 import zipfile
-from research_page import build_research_page, build_research_index, site_navigation
+from research_page import build_research_page, build_research_index, site_navigation, RESEARCH_FIGURES
 
 BASE = Path(__file__).resolve().parents[1]
 SOURCE = BASE / 'source'
@@ -103,6 +103,7 @@ def package_site():
                     'assets/myomimetic-poster.jpg', 'files/Dongmin_Go_CV.pdf',
                     'files/myomimetic-exosuit-video.mp4',
                     'research/myomimetic-exosuit/index.html', 'research/index.html']
+    deploy_files += [f'assets/myomimetic-exosuit/{name}.png' for name in RESEARCH_FIGURES]
     with zipfile.ZipFile(OUTPUT/'godongdongmin.github.io.zip','w',zipfile.ZIP_DEFLATED) as archive:
         for relative in deploy_files:
             archive.write(SITE/relative,relative)
