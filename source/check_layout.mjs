@@ -50,6 +50,10 @@ try{
   await new Promise((res,rej)=>{ws.addEventListener('open',res,{once:true});ws.addEventListener('error',rej,{once:true});});
   ws.addEventListener('message',e=>{const m=JSON.parse(e.data);const p=pending.get(m.id);if(p){clearTimeout(p.timer);pending.delete(m.id);m.error?p.rej(new Error(JSON.stringify(m.error))):p.res(m.result);}});
   await call('Page.enable');
+  if(siteOrigin){
+    await call('Network.enable');
+    await call('Network.setCacheDisabled',{cacheDisabled:true});
+  }
   const reports=[];
   for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['research-desktop',1440,1200],['research-mobile',390,844],['research-narrow',320,760],['project-desktop',1440,1200],['project-wide',1920,1080],['project-laptop',1280,800],['project-tablet',768,1024],['project-mobile',390,844],['project-narrow',320,760]]){
     await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
