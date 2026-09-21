@@ -7,6 +7,7 @@ import {resolve,dirname,join} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 const base=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const out=join(base,'_build');
+const siteOrigin=process.env.SITE_ORIGIN;
 const profile=join(out,'layout-browser');
 await mkdir(profile,{recursive:true});
 const candidates=[process.env.CHROME_PATH,
@@ -50,10 +51,10 @@ try{
   ws.addEventListener('message',e=>{const m=JSON.parse(e.data);const p=pending.get(m.id);if(p){clearTimeout(p.timer);pending.delete(m.id);m.error?p.rej(new Error(JSON.stringify(m.error))):p.res(m.result);}});
   await call('Page.enable');
   const reports=[];
-  for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['research-desktop',1440,1200],['research-mobile',390,844],['research-narrow',320,760],['project-desktop',1440,1200],['project-mobile',390,844],['project-narrow',320,760]]){
+  for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['research-desktop',1440,1200],['research-mobile',390,844],['research-narrow',320,760],['project-desktop',1440,1200],['project-wide',1920,1080],['project-laptop',1280,800],['project-tablet',768,1024],['project-mobile',390,844],['project-narrow',320,760]]){
     await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
     const localPage=name.startsWith('project-')?'research/myomimetic-exosuit/index.html':name.startsWith('research-')?'research/index.html':'index.html';
-    await call('Page.navigate',{url:pathToFileURL(join(base,localPage)).href});
+    await call('Page.navigate',{url:siteOrigin?new URL(localPage,siteOrigin).href:pathToFileURL(join(base,localPage)).href});
     for(let n=0;n<40;n++){
       const ready=await call('Runtime.evaluate',{expression:'document.readyState',returnByValue:true});
       if(ready.result.value==='complete')break;
@@ -63,6 +64,10 @@ try{
     await call('Runtime.evaluate',{expression:'Promise.all([...document.images].map(img=>img.decode())).then(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))',awaitPromise:true,returnByValue:true});
     const inspection=await call('Runtime.evaluate',{expression:`JSON.stringify({width:innerWidth,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,brokenImages:[...document.images].filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src),headings:[...document.querySelectorAll('h1,h2')].map(e=>e.textContent),overflow:[...document.querySelectorAll('main,aside,nav,article,p,h1,h2,h3')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).map(e=>e.tagName+': '+e.textContent.slice(0,70))})`,returnByValue:true});
     const audit={name,...JSON.parse(inspection.result.value)};
+    if(name.startsWith('project-')){
+      const figures=await call('Runtime.evaluate',{expression:`JSON.stringify({images:[...document.querySelectorAll('.study-figure img')].map(img=>{const r=img.getBoundingClientRect(),p=img.closest('figure').getBoundingClientRect();return {file:img.src.split('/').pop(),width:r.width,left:r.left,right:r.right,fits:r.width>0&&r.left>=p.left-1&&r.right<=p.right+1&&r.right<=innerWidth&&r.left>=0,ratioPreserved:Math.abs(r.width/r.height-img.naturalWidth/img.naturalHeight)<0.01}}),pairs:[...document.querySelectorAll('.figure-pair')].map(pair=>{const [a,b]=[...pair.children].map(e=>e.getBoundingClientRect());return {sideBySide:Math.abs(a.top-b.top)<1&&a.right<=b.left+1,leftWidth:a.width,rightWidth:b.width}})})`,returnByValue:true});
+      audit.figures=JSON.parse(figures.result.value);
+    }
     const navigation=await call('Runtime.evaluate',{expression:`JSON.stringify({links:[...document.querySelectorAll('nav a')].map(a=>({text:a.textContent,href:a.getAttribute('href')})),active:document.querySelector('nav [aria-current="page"]')?.textContent,videos:document.querySelectorAll('video').length})`,returnByValue:true});
     audit.navigation=JSON.parse(navigation.result.value);
     const isHome=localPage==='index.html';
@@ -78,7 +83,7 @@ try{
   }
   await writeFile(join(out,'layout-check.json'),JSON.stringify(reports,null,2));
   console.log(JSON.stringify(reports,null,2));
-  if(reports.some(r=>r.scrollWidth>r.clientWidth||r.brokenImages.length||r.overflow.length||(r.video&&(!r.video.playing||r.video.error))))process.exitCode=1;
+  if(reports.some(r=>r.scrollWidth>r.clientWidth||r.brokenImages.length||r.overflow.length||(r.video&&(!r.video.playing||r.video.error))||(r.figures&&(r.figures.images.length!==8||r.figures.images.some(i=>!i.fits||!i.ratioPreserved)||r.figures.pairs.length!==2||r.figures.pairs.some(p=>!p.sideBySide)))))process.exitCode=1;
 }finally{
   if(ws?.readyState===WebSocket.OPEN){try{await call('Browser.close');}catch{}ws.close();}
   for(const p of pending.values())clearTimeout(p.timer);

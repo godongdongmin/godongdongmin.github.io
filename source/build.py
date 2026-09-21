@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import sys
 import zipfile
-from research_page import build_research_page, build_research_index, site_navigation, RESEARCH_FIGURES
+from research_page import build_research_page, build_research_index, site_navigation, RESEARCH_FIGURES, stylesheet_href
 
 BASE = Path(__file__).resolve().parents[1]
 SOURCE = BASE / 'source'
@@ -80,7 +80,7 @@ content = intro + (section('Publications',publication_legend+publications+manusc
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])} at HUROTICS. M.S. in Mechanical Engineering, Chung-Ang University; former EUV Equipment Engineer at Samsung Electronics DS.">
-<meta name="theme-color" content="#ffffff"><link rel="canonical" href="{h(P['website'])}"><meta property="og:title" content="{h(P['name'])} | Academic Homepage"><meta property="og:description" content="{h(P['headline'])}. Education, experience, and research."><meta property="og:type" content="website"><meta property="og:url" content="{h(P['website'])}"><meta property="og:image" content="{h(P['website'])}assets/portrait.jpg"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css"></head>
+<meta name="theme-color" content="#ffffff"><link rel="canonical" href="{h(P['website'])}"><meta property="og:title" content="{h(P['name'])} | Academic Homepage"><meta property="og:description" content="{h(P['headline'])}. Education, experience, and research."><meta property="og:type" content="website"><meta property="og:url" content="{h(P['website'])}"><meta property="og:image" content="{h(P['website'])}assets/portrait.jpg"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="{stylesheet_href(SITE, '')}"></head>
 <body><a class="skip" href="#main">Skip to content</a>{site_navigation('home','index.html','research/index.html')}
 <div class="layout"><aside class="profile" aria-label="Profile"><img class="portrait" src="assets/portrait.jpg" alt="Portrait of {h(P['name'])}" width="218" height="262"><h1>{h(P['name'])}{native_name}</h1><p class="headline">{h(P['headline'])}</p><p class="affiliation">{h(P.get('profile_affiliation','Chung-Ang University'))}</p><div class="profile-links">{email_link}<a href="https://github.com/{h(P['github'])}">{icon('github')}GitHub</a><a href="files/{cv_filename}">{icon('document')}Curriculum Vitae</a></div></aside><main class="content" id="main">{content}</main></div>
 <footer class="footer"><span>© 2026 {h(P['name'])}</span><span>Last updated: {h(P['updated'])} · <a href="https://github.com/{h(P['github'])}">GitHub</a></span></footer></body></html>'''

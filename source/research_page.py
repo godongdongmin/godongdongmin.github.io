@@ -1,5 +1,11 @@
 """Static project page for the supplied manuscript and supplementary video."""
 from html import escape as h
+from hashlib import sha256
+
+def stylesheet_href(site, prefix):
+    # A new URL when styles change prevents stale CSS after a Pages deployment.
+    version = sha256((site/'assets/style.css').read_bytes()).hexdigest()[:12]
+    return f'{prefix}assets/style.css?v={version}'
 
 RESEARCH_FIGURES = {
     'system': (2000, 778),
@@ -42,7 +48,7 @@ def build_research_index(site, profile):
     page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Research | {h(profile['name'])}</title><meta name="description" content="Research projects, videos, and publications by {h(profile['name'])}.">
-<link rel="stylesheet" href="../assets/style.css"><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="canonical" href="{h(profile['website'])}research/"></head>
+<link rel="stylesheet" href="{stylesheet_href(site, '../')}"><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="canonical" href="{h(profile['website'])}research/"></head>
 <body><a class="skip" href="#main">Skip to content</a>{site_navigation('research','../index.html','index.html')}
 <main class="research-main" id="main"><header class="research-heading"><h1>Research</h1><p>{h(', '.join(profile.get('homepage_interests',[])))}</p></header>{studies}<section class="section published-research"><h2>Published Work</h2>{published}</section></main>
 <footer class="footer"><span>© 2026 {h(profile['name'])}</span><span>Last updated: {h(profile['updated'])}</span></footer></body></html>'''
@@ -57,7 +63,7 @@ def build_research_page(site, profile, manuscript):
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Myomimetic Exosuit Assistance | {h(profile['name'])}</title>
 <meta name="description" content="A unified-critic multi-agent reinforcement learning framework connecting musculoskeletal simulation, embedded control, and hardware evaluation across three walking environments.">
-<link rel="stylesheet" href="../../assets/style.css"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{stylesheet_href(site, '../../')}"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="{h(profile['website'])}research/myomimetic-exosuit/">
 </head><body class="project-page"><a class="skip" href="#main">Skip to content</a>
 {site_navigation('research','../../index.html','../index.html')}
