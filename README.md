@@ -7,7 +7,6 @@ A lightweight academic homepage built with static HTML and CSS.
 - `assets/portrait.jpg`: profile photograph
 - `files/Dongmin_Go_CV.pdf`: curriculum vitae
 - `research/myomimetic-exosuit/index.html`: manuscript overview and video
-- `files/myomimetic-exosuit-draft.pdf`: working manuscript draft
 - `files/myomimetic-exosuit-video.mp4`: supplementary video
 - `.nojekyll`: serve the site as plain static files
 

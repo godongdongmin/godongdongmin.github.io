@@ -8,3 +8,4 @@
 @media(max-width:900px){.research-entry{grid-template-columns:1fr}.research-thumb{max-width:300px}}
 @media(max-width:680px){.project-main{padding:26px 22px 35px}.project-header h1{font-size:29px;letter-spacing:-.5px}.project-header{margin-bottom:34px}.method-grid{grid-template-columns:1fr;gap:10px}.project-actions .cv-link{font-size:12px;padding:7px 11px}.results-table th,.results-table td{padding:10px 7px}.results-table{font-size:13px}.project-authors{font-size:14px}}
 @media print{.topbar,.skip,.footer,.cv-link{display:none}.layout{padding:0;gap:32px;grid-template-columns:190px 1fr}.profile{position:static}.portrait{width:160px;height:190px}body{font-size:11pt}.section{break-inside:avoid}a{color:inherit}}
+.publication-video{margin-top:14px}
