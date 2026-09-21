@@ -16,19 +16,27 @@ class Links(HTMLParser):
         super().__init__()
         self.paths = []
         self.videos = 0
+        self.ids = set()
     def handle_starttag(self, tag, attrs):
         if tag == 'video':
             self.videos += 1
         for key, value in attrs:
+            if key == 'id':
+                self.ids.add(value)
             if key in ('href', 'src', 'poster') and value:
                 self.paths.append(value)
 
-for relative in ('index.html', 'research/myomimetic-exosuit/index.html'):
+for relative in ('index.html', 'research/index.html', 'research/myomimetic-exosuit/index.html'):
     page = ROOT/relative
     text = page.read_text(encoding='utf-8')
     parser = Links()
     parser.feed(text)
-    assert parser.videos == 1, f'Expected one inline video in {relative}'
+    assert parser.videos == (0 if relative == 'index.html' else 1), f'Unexpected video layout in {relative}'
+    assert text.count('aria-current="page"') == 1, f'Missing active navigation in {relative}'
+    assert 'class="brand"' not in text, f'Duplicate name in navigation: {relative}'
+    if relative == 'index.html':
+        assert 'href="research/index.html#myomimetic-video">Video</a>' in text
+        assert all(interest in text for interest in profile['homepage_interests'])
     assert 'myomimetic-exosuit-draft.pdf' not in text, 'Draft link must stay removed'
     for url in parser.paths:
         parts = urlsplit(url)
@@ -37,6 +45,10 @@ for relative in ('index.html', 'research/myomimetic-exosuit/index.html'):
         target = (page.parent/unquote(parts.path)).resolve()
         assert target.is_relative_to(ROOT), f'Link leaves repository: {url}'
         assert target.exists(), f'Missing local link: {relative}: {url}'
+        if parts.fragment and target.suffix == '.html':
+            linked = Links()
+            linked.feed(target.read_text(encoding='utf-8'))
+            assert unquote(parts.fragment) in linked.ids, f'Missing link target: {url}'
 
 probes = ['inbox/notes/request.md', 'inbox/research/manuscript.pdf',
           'inbox/photos/portrait.jpg', 'inbox/education/transcript.pdf',
@@ -59,4 +71,4 @@ if archive.exists():
         assert not any('draft.pdf' in p for p in z.namelist())
         assert z.read('files/Dongmin_Go_CV.pdf') == (ROOT/'files/Dongmin_Go_CV.pdf').read_bytes()
 assert (ROOT/'files/Dongmin_Go_CV.pdf').read_bytes().startswith(b'%PDF-')
-print('OK: local links, inline videos, public data, ignored inputs, and deployment package.')
+print('OK: Home/Research pages, video links, public data, ignored inputs, and deployment package.')

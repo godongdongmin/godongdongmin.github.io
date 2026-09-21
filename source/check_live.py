@@ -9,7 +9,7 @@ import json
 
 BASE=Path(__file__).resolve().parents[1]
 ORIGIN='https://godongdongmin.github.io/'
-TARGETS=[('', 'GET'),('research/myomimetic-exosuit/', 'GET'),
+TARGETS=[('', 'GET'),('research/', 'GET'),('research/myomimetic-exosuit/', 'GET'),
          ('files/Dongmin_Go_CV.pdf','GET'),('files/myomimetic-exosuit-draft.pdf','HEAD'),
          ('files/myomimetic-exosuit-video.mp4','HEAD'),('assets/style.css','HEAD'),
          ('assets/portrait.jpg','HEAD'),('assets/myomimetic-poster.jpg','HEAD')]
@@ -35,9 +35,16 @@ def check(item):
         assert all(html.escape(m.get('relation',''),quote=True) in text for m in profile['manuscripts']), 'Thesis-to-journal relationship is missing'
         report['latest_profile_verified']=True
         report['publications_verified']=True
-        assert '<video ' in text and 'publication-video' in text, 'Inline video is missing'
+        assert '<video ' not in text and 'research/index.html#myomimetic-video' in text, 'Home video link does not match'
+        assert all(interest in text for interest in profile['homepage_interests'])
+        assert 'href="index.html" aria-current="page">Home</a>' in text
         assert 'Paper (draft)' not in text and 'myomimetic-exosuit-draft.pdf' not in text
-        report['inline_video_verified']=True
+        report['home_navigation_and_video_link_verified']=True
+    if path=='research/':
+        text=body.decode('utf-8')
+        assert 'id="myomimetic-video"' in text and '<video ' in text
+        assert 'href="index.html" aria-current="page">Research</a>' in text
+        report['research_page_and_active_navigation_verified']=True
     if path=='research/myomimetic-exosuit/':
         text=body.decode('utf-8')
         assert '<video ' in text and 'myomimetic-exosuit-video.mp4' in text
@@ -51,5 +58,6 @@ def check(item):
     return report
 with ThreadPoolExecutor(max_workers=4) as pool:
     reports=list(pool.map(check,TARGETS))
+(BASE/'_build').mkdir(exist_ok=True)
 (BASE/'_build/live-check.json').write_text(json.dumps(reports,indent=2),encoding='utf-8')
 print(json.dumps(reports,indent=2))

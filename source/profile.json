@@ -6,7 +6,9 @@
   "website": "https://godongdongmin.github.io/",
   "headline": "Pro, HUROTICS",
   "profile_affiliation": "M.S. in Mechanical Engineering, Chung-Ang University",
-  "summary": "I currently work at HUROTICS. I received my M.S. in Mechanical Engineering from Chung-Ang University, where I worked in the Assistive and Rehabilitation Robotics Lab under the supervision of Prof. Giuk Lee. Previously, I was an Equipment Engineer in the Memory Business of Samsung Electronics' Device Solutions (DS) Division, responsible for EUV lithography equipment. I also received my B.S. in Mechanical Engineering from Chung-Ang University.",
+  "summary": "I currently work as a Pro at HUROTICS. I hold an M.S. in Mechanical Engineering from Chung-Ang University.",
+  "homepage_interests": ["Human-Robot Interaction", "RL simulation", "Robot Control"],
+  "background": "Previously, I worked as an Equipment Engineer in the Memory Business of Samsung Electronics' Device Solutions (DS) Division, responsible for EUV lithography equipment. I completed my master's research in the Assistive and Rehabilitation Robotics Lab at Chung-Ang University under the supervision of Prof. Giuk Lee, and also received my B.S. in Mechanical Engineering from Chung-Ang University.",
   "research_interests": [],
   "education": [
     {

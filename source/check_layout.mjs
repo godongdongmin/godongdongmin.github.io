@@ -50,9 +50,9 @@ try{
   ws.addEventListener('message',e=>{const m=JSON.parse(e.data);const p=pending.get(m.id);if(p){clearTimeout(p.timer);pending.delete(m.id);m.error?p.rej(new Error(JSON.stringify(m.error))):p.res(m.result);}});
   await call('Page.enable');
   const reports=[];
-  for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['project-desktop',1440,1200],['project-mobile',390,844],['project-narrow',320,760]]){
+  for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['research-desktop',1440,1200],['research-mobile',390,844],['research-narrow',320,760],['project-desktop',1440,1200],['project-mobile',390,844],['project-narrow',320,760]]){
     await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
-    const localPage=name.startsWith('project-')?'research/myomimetic-exosuit/index.html':'index.html';
+    const localPage=name.startsWith('project-')?'research/myomimetic-exosuit/index.html':name.startsWith('research-')?'research/index.html':'index.html';
     await call('Page.navigate',{url:pathToFileURL(join(base,localPage)).href});
     for(let n=0;n<40;n++){
       const ready=await call('Runtime.evaluate',{expression:'document.readyState',returnByValue:true});
@@ -62,7 +62,11 @@ try{
     await call('Runtime.evaluate',{expression:'document.fonts.ready.then(()=>true)',awaitPromise:true,returnByValue:true});
     const inspection=await call('Runtime.evaluate',{expression:`JSON.stringify({width:innerWidth,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,brokenImages:[...document.images].filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src),headings:[...document.querySelectorAll('h1,h2')].map(e=>e.textContent),overflow:[...document.querySelectorAll('main,aside,nav,article,p,h1,h2,h3')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).map(e=>e.tagName+': '+e.textContent.slice(0,70))})`,returnByValue:true});
     const audit={name,...JSON.parse(inspection.result.value)};
-    if(name==='desktop'||name==='mobile'||name==='project-desktop'){
+    const navigation=await call('Runtime.evaluate',{expression:`JSON.stringify({links:[...document.querySelectorAll('nav a')].map(a=>({text:a.textContent,href:a.getAttribute('href')})),active:document.querySelector('nav [aria-current="page"]')?.textContent,videos:document.querySelectorAll('video').length})`,returnByValue:true});
+    audit.navigation=JSON.parse(navigation.result.value);
+    const isHome=localPage==='index.html';
+    if(audit.navigation.links.map(a=>a.text).join(',')!=='Home,Research'||audit.navigation.active!==(isHome?'Home':'Research')||audit.navigation.videos!==(isHome?0:1))throw new Error('Unexpected navigation/video structure: '+name);
+    if(name==='research-desktop'||name==='research-mobile'||name==='project-desktop'){
       const playback=await call('Runtime.evaluate',{expression:`(async()=>{const v=document.querySelector('video'); if(!v)return {error:'Video element missing'}; if(v.readyState<1)await Promise.race([new Promise((r,j)=>{v.addEventListener('loadedmetadata',r,{once:true});v.addEventListener('error',()=>j(new Error('Video load failed')),{once:true});}),new Promise((_,j)=>setTimeout(()=>j(new Error('Video metadata timeout')),7000))]); v.muted=true; await v.play(); await new Promise(r=>setTimeout(r,500)); const result={duration:v.duration,width:v.videoWidth,height:v.videoHeight,playing:!v.paused,currentTime:v.currentTime,error:v.error?.message??null};v.pause();v.currentTime=0;return result;})()`,awaitPromise:true,returnByValue:true});
       audit.video=playback.result.value??{error:playback.exceptionDetails?.text??'Video check failed'};
     }

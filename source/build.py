@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import sys
 import zipfile
-from research_page import build_research_page
+from research_page import build_research_page, build_research_index, site_navigation
 
 BASE = Path(__file__).resolve().parents[1]
 SOURCE = BASE / 'source'
@@ -62,22 +62,20 @@ manuscripts = ''
 for m in P.get('manuscripts',[]):
     authors = h(m.get('authors','')).replace(h(P['name']),'<strong>'+h(P['name'])+'</strong>')
     title = f'<a href="{h(m["url"])}">{h(m["title"])}</a>' if m.get('url') else h(m['title'])
-    video = f'<video class="project-video publication-video" controls playsinline preload="metadata" poster="{h(m["thumbnail"])}" aria-label="Research video: {h(m["title"])}"><source src="{h(m["video_url"])}" type="video/mp4">Your browser does not support embedded video.</video>' if m.get('video_url') else ''
+    video = '<div class="publication-links"><a href="research/index.html#myomimetic-video">Video</a></div>' if m.get('video_url') else ''
     manuscripts += f'<article class="entry" id="manuscripts"><h3 class="publication-title">[{h(m["label"])}] {title}</h3><p class="authors">{authors}</p><p class="detail">{h(m.get("relation",""))} <em>{h(m["status"])}</em></p>{video}</article>'
 cv_filename = 'Dongmin_Go_CV.pdf'
 email_link = f'<a href="mailto:{h(P["email"])}">{icon("email")}{h(P["email"])}</a>' if P['email'] else ''
-tags = '<div class="tags">'+''.join(f'<span class="tag">{h(i)}</span>' for i in P['research_interests'])+'</div>' if P['research_interests'] else ''
-pub_nav = '<a href="#publications">Publications</a>' if publications or manuscripts else ''
-manuscript_nav = ''
+interests = '<p class="research-interests"><strong>My research interests:</strong> '+h(', '.join(P.get('homepage_interests',[])))+'</p>' if P.get('homepage_interests') else ''
 native_name = f'<span class="native-name" lang="ko">{h(P["name_ko"])}</span>' if P.get('name_ko') else ''
-intro = f'<section class="section intro" id="about"><h2>About Me</h2><p>{h(P["summary"])}</p>{tags}<a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
+intro = f'<section class="section intro" id="about"><h2>About Me</h2><p>{h(P["summary"])}</p>{interests}<p>{h(P.get("background",""))}</p><a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
 publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · W = Work in progress</p>'
 content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + section('Education',education) + section('Experience',experience) + section('Honors & Awards',awards,'awards')
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])} at HUROTICS. M.S. in Mechanical Engineering, Chung-Ang University; former EUV Equipment Engineer at Samsung Electronics DS.">
 <meta name="theme-color" content="#ffffff"><link rel="canonical" href="{h(P['website'])}"><meta property="og:title" content="{h(P['name'])} | Academic Homepage"><meta property="og:description" content="{h(P['headline'])}. Education, experience, and research."><meta property="og:type" content="website"><meta property="og:url" content="{h(P['website'])}"><meta property="og:image" content="{h(P['website'])}assets/portrait.jpg"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><nav class="nav" aria-label="Main navigation"><a class="brand" href="#about">{h(P['name'])}</a><div class="nav-links"><a href="#about">About</a>{pub_nav}{manuscript_nav}<a href="#education">Education</a><a href="#experience">Experience</a><a href="#awards">Awards</a><a href="files/{cv_filename}">CV</a></div></nav></header>
+<body><a class="skip" href="#main">Skip to content</a>{site_navigation('home','index.html','research/index.html')}
 <div class="layout"><aside class="profile" aria-label="Profile"><img class="portrait" src="assets/portrait.jpg" alt="Portrait of {h(P['name'])}" width="218" height="262"><h1>{h(P['name'])}{native_name}</h1><p class="headline">{h(P['headline'])}</p><p class="affiliation">{h(P.get('profile_affiliation','Chung-Ang University'))}</p><div class="profile-links">{email_link}<a href="https://github.com/{h(P['github'])}">{icon('github')}GitHub</a><a href="files/{cv_filename}">{icon('document')}Curriculum Vitae</a></div></aside><main class="content" id="main">{content}</main></div>
 <footer class="footer"><span>© 2026 {h(P['name'])}</span><span>Last updated: {h(P['updated'])} · <a href="https://github.com/{h(P['github'])}">GitHub</a></span></footer></body></html>'''
 (SITE/'index.html').write_text(page,encoding='utf-8')
@@ -90,6 +88,7 @@ if not (SITE/'assets/portrait.jpg').is_file():
 for m in P.get('manuscripts',[]):
     if m.get('video_url'):
         build_research_page(SITE,P,m)
+build_research_index(SITE,P)
 
 def package_site():
     # Explicit deployment files only: never package inbox/, source/, or build output.
@@ -97,7 +96,7 @@ def package_site():
                     'assets/portrait.jpg', 'assets/favicon.svg',
                     'assets/myomimetic-poster.jpg', 'files/Dongmin_Go_CV.pdf',
                     'files/myomimetic-exosuit-video.mp4',
-                    'research/myomimetic-exosuit/index.html']
+                    'research/myomimetic-exosuit/index.html', 'research/index.html']
     with zipfile.ZipFile(OUTPUT/'godongdongmin.github.io.zip','w',zipfile.ZIP_DEFLATED) as archive:
         for relative in deploy_files:
             archive.write(SITE/relative,relative)
