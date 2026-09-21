@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
 import json
+import html
 import subprocess
 import zipfile
 
@@ -36,7 +37,9 @@ for relative in ('index.html', 'research/index.html', 'research/myomimetic-exosu
     assert 'class="brand"' not in text, f'Duplicate name in navigation: {relative}'
     if relative == 'index.html':
         assert 'href="research/index.html#myomimetic-video">Video</a>' in text
-        assert all(interest in text for interest in profile['homepage_interests'])
+        assert html.escape(profile['homepage_interest_statement'],quote=True) in text
+        assert 'id="background"' in text
+        assert text.count('class="timeline-item"') == sum(len(profile[k]) for k in ('education','experience','awards'))
     assert 'myomimetic-exosuit-draft.pdf' not in text, 'Draft link must stay removed'
     for url in parser.paths:
         parts = urlsplit(url)

@@ -38,7 +38,7 @@ CV는 Times New Roman이 설치되어 있으면 사용하고, 없으면 TeX Gyre
 
 사진·영상은 위 경로에 한 벌만 관리합니다. `index.html`, `research/myomimetic-exosuit/index.html`, `files/Dongmin_Go_CV.pdf`는 생성 결과이므로 내용 수정은 원본 데이터/스크립트에서 합니다.
 
-상단 Home / Research 메뉴는 각각 `index.html`, `research/index.html`로 이동하며 현재 페이지를 표시합니다. 홈 About Me는 `summary`(현재 직장·학력), `homepage_interests`(홈페이지 연구 관심사), `background`(이전 이력) 순서입니다. `homepage_interests`는 CV의 관심사 항목과 별도로 관리합니다. 홈의 Video 링크는 Research 페이지의 영상으로 연결됩니다. 연구 이미지·영상·설명은 `source/research_page.py`와 공개 미디어 경로에서 편집합니다.
+상단 Home / Research 메뉴는 각각 `index.html`, `research/index.html`로 이동하며 현재 페이지를 표시합니다. 홈 About Me 첫 문단은 `summary`(현재 업무·석사 연구실)와 `homepage_interest_statement`(문장형 연구 관심사)를 연결하고, 둘째 문단은 `background`(이전 이력)를 사용합니다. Research 페이지의 관심사 목록은 `homepage_interests`에서 관리하며 CV 관심사와 별도입니다. 홈 하단 Background 연혁은 학력·경력·수상을 통합해 재직 중 항목, 종료 연도 내림차순으로 표시합니다. 월을 모르는 항목은 원래 연도 표기를 유지합니다. `homepage_role`은 홈페이지 업무 설명이며 CV의 공식 직함 `role`과 구분됩니다. 홈의 Video 링크는 Research 페이지의 영상으로 연결됩니다. 연구 이미지·영상·설명은 `source/research_page.py`와 공개 미디어 경로에서 편집합니다.
 
 ## 자료를 넣고 반영하기
 

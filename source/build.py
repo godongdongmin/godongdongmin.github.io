@@ -6,6 +6,7 @@ Requires Python 3 and XeLaTeX; uses the Python standard library only.
 from pathlib import Path
 import html
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -46,9 +47,23 @@ def detail_list(details):
 def section(name, body, ident=None):
     return f'<section class="section" id="{ident or name.lower()}"><h2>{h(name)}</h2>{body}</section>'
 
-education = ''.join(f'''<article class="entry"><div class="entry-top"><h3>{h(e['institution'])}</h3><span class="dates">{h(e['dates'])}</span></div><p>{h(e['degree'])}</p>{''.join('<p class="detail">'+h(d)+'</p>' for d in e['details'])}</article>''' for e in P['education'])
-experience = ''.join(f'''<article class="entry"><div class="entry-top"><h3>{h(e['institution'])}</h3><span class="dates">{h(e['dates'])}</span></div>{'<p>'+h(e['role'])+'</p>' if e['role'] else ''}{detail_list(e['details'])}</article>''' for e in P['experience'])
-awards = ''.join(f'''<article class="entry"><div class="entry-top"><h3>{h(a['title'])}</h3><time datetime="{h(a['date_iso'])}">{h(a['date'])}</time></div><p>{h(a['event'])}</p><p class="detail">{h(a['organization'])}</p></article>''' for a in P['awards'])
+timeline_items = []
+for e in P['education']:
+    timeline_items.append({'category':'Education', 'dates':e['dates'], 'title':e['institution'], 'subtitle':e['degree'], 'details':e['details']})
+for e in P['experience']:
+    timeline_items.append({'category':'Experience', 'dates':e['dates'], 'title':e['institution'], 'subtitle':e.get('homepage_role',e['role']), 'details':e['details']})
+for a in P['awards']:
+    timeline_items.append({'category':'Honor & Award', 'dates':a['date'], 'title':a['title'], 'subtitle':a['event'], 'details':[a['organization']]})
+
+def timeline_year(item):
+    # Ongoing work first; completed activities by end year. No month is inferred.
+    return 9999 if 'Present' in item['dates'] else max(int(y) for y in re.findall(r'\b\d{4}\b',item['dates']))
+
+timeline = '<ol class="timeline">'
+for item in sorted(timeline_items,key=timeline_year,reverse=True):
+    details = ''.join(f'<p class="detail">{h(d)}</p>' for d in item['details'])
+    timeline += f'<li class="timeline-item"><div class="timeline-date">{h(item["dates"])}</div><article class="entry timeline-body"><p class="timeline-category">{h(item["category"])}</p><h3>{h(item["title"])}</h3><p>{h(item["subtitle"])}</p>{details}</article></li>'
+timeline += '</ol>'
 publications = ''
 for pub in P['publications']:
     title = h(pub['title'])
@@ -66,11 +81,11 @@ for m in P.get('manuscripts',[]):
     manuscripts += f'<article class="entry" id="manuscripts"><h3 class="publication-title">[{h(m["label"])}] {title}</h3><p class="authors">{authors}</p><p class="detail">{h(m.get("relation",""))} <em>{h(m["status"])}</em></p>{video}</article>'
 cv_filename = 'Dongmin_Go_CV.pdf'
 email_link = f'<a href="mailto:{h(P["email"])}">{icon("email")}{h(P["email"])}</a>' if P['email'] else ''
-interests = '<p class="research-interests"><strong>My research interests:</strong> '+h(', '.join(P.get('homepage_interests',[])))+'</p>' if P.get('homepage_interests') else ''
+interest_sentence = P.get('homepage_interest_statement','')
 native_name = f'<span class="native-name" lang="ko">{h(P["name_ko"])}</span>' if P.get('name_ko') else ''
-intro = f'<section class="section intro" id="about"><h2>About Me</h2><p>{h(P["summary"])}</p>{interests}<p>{h(P.get("background",""))}</p><a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
+intro = f'<section class="section intro" id="about"><h2>About Me</h2><p>{h(P["summary"])} {h(interest_sentence)}</p><p>{h(P.get("background",""))}</p><a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
 publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · W = Work in progress</p>'
-content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + section('Education',education) + section('Experience',experience) + section('Honors & Awards',awards,'awards')
+content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + section('Background',timeline,'background')
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])} at HUROTICS. M.S. in Mechanical Engineering, Chung-Ang University; former EUV Equipment Engineer at Samsung Electronics DS.">
