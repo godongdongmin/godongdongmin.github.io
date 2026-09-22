@@ -18,5 +18,5 @@
 
 /* Full-width biography followed by the companion robotics goal and image. */
 .about-copy p{text-wrap:pretty}
-.about-copy{min-width:0}.about-vision{margin:25px 0 18px}.intro .about-goal{margin:0;padding:20px 24px;border-left:3px solid var(--accent);border-radius:5px 5px 0 0;background:var(--wash);color:var(--accent);font:400 22px/1.55 var(--serif);text-wrap:pretty}.about-image{width:100%;margin:0}.about-image img{display:block;width:100%;max-width:100%;height:auto;border-radius:0 0 5px 5px}.about-image figcaption{text-align:right;font-size:12px;font-style:italic;color:var(--muted);margin-top:6px}
+.about-copy{min-width:0}.about-vision{margin:25px 0 18px}.intro .about-goal{margin:0;padding:20px 24px;border-left:3px solid var(--accent);border-radius:5px;background:var(--wash);color:var(--accent);font:400 22px/1.55 var(--serif);text-wrap:pretty}.about-image{width:85%;max-width:480px;margin:16px auto 0}.about-image img{display:block;width:100%;max-width:100%;height:auto;border-radius:5px}.about-image figcaption{text-align:right;font-size:12px;font-style:italic;color:var(--muted);margin-top:6px}
 @media(max-width:680px){.intro .about-goal{font-size:19px;padding:16px 18px}}
