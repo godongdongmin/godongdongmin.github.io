@@ -74,8 +74,8 @@ cv_filename = 'Dongmin_Go_CV.pdf'
 email_link = f'<a href="mailto:{h(P["email"])}">{icon("email")}{h(P["email"])}</a>' if P['email'] else ''
 interest_sentence = P.get('homepage_interest_statement','')
 native_name = f'<span class="native-name" lang="ko">{h(P["name_ko"])}</span>' if P.get('name_ko') else ''
-about_image = '<figure class="about-image"><img src="assets/real-steel.jpg" alt="A boy sitting beside the robot Atom in Real Steel" width="335" height="377"><figcaption>Real Steel</figcaption></figure>'
-intro = f'<section class="section intro" id="about"><h2>About Me</h2><div class="about-body"><div class="about-copy"><p>{h(P["summary"])} {h(interest_sentence)}</p><p>{h(P.get("background",""))}</p><a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></div>{about_image}</div></section>'
+about_image = '<figure class="about-image"><img src="assets/real-steel.jpg" alt="A boy sitting beside the robot Atom in Real Steel" width="335" height="377"><figcaption>Real Steel (2011)</figcaption></figure>'
+intro = f'<section class="section intro" id="about"><h2>About Me</h2><div class="about-body"><div class="about-copy"><p>{h(P["summary"])}</p><p>{h(interest_sentence)}</p><p>{h(P.get("background",""))}</p><a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></div>{about_image}</div></section>'
 publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · W = Work in progress</p>'
 content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + background
 page = f'''<!doctype html>
