@@ -38,6 +38,7 @@ for relative in ('index.html', 'research/index.html', 'research/myomimetic-exosu
     if relative == 'index.html':
         assert 'href="research/index.html#myomimetic-video">Video</a>' in text
         assert html.escape(profile['homepage_interest_statement'],quote=True) in text.replace('<br class="sentence-break">', ' ')
+        assert html.escape(profile['homepage_goal_statement'],quote=True) in text
         assert 'id="background"' in text
         assert {'education', 'experience', 'awards'} <= parser.ids
         assert text.count('class="entry background-entry"') == sum(len(profile[k]) for k in ('education','experience','awards'))
