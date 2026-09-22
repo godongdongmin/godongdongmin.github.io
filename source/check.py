@@ -37,7 +37,8 @@ for relative in ('index.html', 'research/index.html', 'research/myomimetic-exosu
     assert 'class="brand"' not in text, f'Duplicate name in navigation: {relative}'
     if relative == 'index.html':
         assert 'href="research/index.html#myomimetic-video">Video</a>' in text
-        assert html.escape(profile['homepage_interest_statement'],quote=True) in text.replace('<br class="sentence-break">', ' ')
+        prose = text.replace('<br class="sentence-break">', ' ').replace('<strong>', '').replace('</strong>', '')
+        assert html.escape(profile['homepage_interest_statement'],quote=True) in prose
         assert html.escape(profile['homepage_goal_statement'],quote=True) in text
         assert 'id="background"' in text
         assert {'education', 'experience', 'awards'} <= parser.ids
