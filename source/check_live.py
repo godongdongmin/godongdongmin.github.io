@@ -36,8 +36,9 @@ def check(item):
         report['latest_profile_verified']=True
         report['publications_verified']=True
         assert '<video ' not in text and 'research/index.html#myomimetic-video' in text, 'Home video link does not match'
-        assert html.escape(profile['homepage_interest_statement'],quote=True) in text
-        assert html.escape(profile['summary'],quote=True) in text
+        prose = text.replace('<br class="sentence-break">', ' ')
+        assert html.escape(profile['homepage_interest_statement'],quote=True) in prose
+        assert html.escape(profile['summary'],quote=True) in prose
         assert 'class="background-grid"' in text
         assert all(f'id="{section}"' in text for section in ('education', 'experience', 'awards'))
         assert 'href="index.html" aria-current="page">Home</a>' in text
