@@ -9,10 +9,14 @@ import json
 
 BASE=Path(__file__).resolve().parents[1]
 ORIGIN='https://godongdongmin.github.io/'
+PROFILE=json.loads((BASE/'source/profile.json').read_text(encoding='utf-8'))
 TARGETS=[('', 'GET'),('research/', 'GET'),('research/myomimetic-exosuit/', 'GET'),
          ('files/Dongmin_Go_CV.pdf','GET'),('files/myomimetic-exosuit-draft.pdf','HEAD'),
          ('files/myomimetic-exosuit-video.mp4','HEAD'),('assets/style.css','HEAD'),
          ('assets/portrait.jpg','HEAD'),('assets/myomimetic-poster.jpg','HEAD')]
+for project in PROFILE['projects']:
+    TARGETS += [(project['url'], 'GET'), (project['thumbnail'], 'HEAD')]
+    TARGETS += [(v[key], 'HEAD') for v in project['videos'] for key in ('url', 'poster')]
 def check(item):
     path,method=item
     request=Request(ORIGIN+path,method=method,headers={'User-Agent':'AcademicHomepageDeploymentCheck/1.0'})
@@ -60,6 +64,12 @@ def check(item):
     if path=='files/Dongmin_Go_CV.pdf':
         assert body==(BASE/'files/Dongmin_Go_CV.pdf').read_bytes(), 'Live CV differs from local version'
         report['latest_cv_sha256']=hashlib.sha256(body).hexdigest()
+    if path in [p['url'] for p in PROFILE['projects']]:
+        assert body == (BASE/path).read_bytes(), 'Live project page differs from local version'
+        report['latest_selected_project_verified']=True
+    if path=='':
+        assert 'Selected Projects' in body.decode('utf-8')
+        assert all(html.escape(p['title'],quote=True) in body.decode('utf-8') for p in PROFILE['projects'])
     return report
 with ThreadPoolExecutor(max_workers=4) as pool:
     reports=list(pool.map(check,TARGETS))

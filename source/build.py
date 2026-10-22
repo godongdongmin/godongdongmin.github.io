@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import sys
 import zipfile
-from research_page import build_research_page, build_research_index, site_navigation, RESEARCH_FIGURES, stylesheet_href
+from research_page import build_research_page, build_research_index, build_selected_project, site_navigation, RESEARCH_FIGURES, stylesheet_href
 
 BASE = Path(__file__).resolve().parents[1]
 SOURCE = BASE / 'source'
@@ -67,7 +67,7 @@ for pub in P['publications']:
     links = ''.join(f'<a href="{h(url)}">{h(label)}</a>' for label,url in pub.get('links',{}).items())
     authors = h(pub['authors']).replace(h(P['name']), '<strong>'+h(P['name'])+'</strong>')
     publications += f'<article class="entry"><h3 class="publication-title">[{h(pub["label"])}] {title}</h3><p>{authors}</p><p class="detail">{h(pub["venue"])} · {h(pub["citation_details"])}</p><div class="publication-links">{links}</div></article>'
-projects = ''.join(f'<article class="entry"><h3>{h(p["title"])}</h3><p>{h(p["description"])}</p>'+detail_list(p.get('details',[]))+(f'<p><a href="{h(p["url"])}">Project / Code</a></p>' if p.get('url') else '')+'</article>' for p in P['projects'])
+projects = ''.join(f'<article class="entry selected-project"><a class="selected-project-photo" href="{h(p["url"])}"><img src="{h(p["thumbnail"])}" alt="{h(p["photo_alt"])}" width="1080" height="1472" loading="lazy"></a><div><h3><a href="{h(p["url"])}">{h(p["title"])}</a></h3><p class="project-role">{h(p["role"])}</p><p>{h(p["description"])}</p><p class="selected-project-link"><a href="{h(p["url"])}">Project details, photos &amp; videos <span aria-hidden="true">→</span></a></p></div></article>' for p in P['projects'])
 manuscripts = ''
 for m in P.get('manuscripts',[]):
     authors = h(m.get('authors','')).replace(h(P['name']),'<strong>'+h(P['name'])+'</strong>')
@@ -85,7 +85,7 @@ about_image = '<figure class="about-image"><img src="assets/real-steel-long.jpg"
 about_vision = f'<div class="about-vision"><p class="about-goal">{h(P["homepage_goal_statement"])}</p>{about_image}</div>'
 intro = f'<section class="section intro" id="about"><h2>About Me</h2><div class="about-copy"><p>{about_text(P["summary"])}</p><p>{interest_html}</p><p>{about_text(P.get("background",""))}</p></div>{about_vision}<a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
 publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · W = Work in progress</p>'
-content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Research Projects',projects,'projects') if projects else '') + background
+content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Selected Projects',projects,'projects') if projects else '') + background
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])} at HUROTICS. M.S. in Mechanical Engineering, Chung-Ang University; former EUV Equipment Engineer at Samsung Electronics DS.">
@@ -104,6 +104,8 @@ for m in P.get('manuscripts',[]):
     if m.get('video_url'):
         build_research_page(SITE,P,m)
 build_research_index(SITE,P)
+for project in P['projects']:
+    build_selected_project(SITE, P, project)
 
 def package_site():
     # Explicit deployment files only: never package inbox/, source/, or build output.
@@ -113,6 +115,10 @@ def package_site():
                     'files/myomimetic-exosuit-video.mp4',
                     'research/myomimetic-exosuit/index.html', 'research/index.html']
     deploy_files += [f'assets/myomimetic-exosuit/{name}.png' for name in RESEARCH_FIGURES]
+    for project in P['projects']:
+        deploy_files += [project['url'], project['thumbnail']]
+        for video in project['videos']:
+            deploy_files += [video['url'], video['poster']]
     with zipfile.ZipFile(OUTPUT/'godongdongmin.github.io.zip','w',zipfile.ZIP_DEFLATED) as archive:
         for relative in deploy_files:
             archive.write(SITE/relative,relative)
@@ -126,8 +132,8 @@ contact = [r'\href{https://github.com/'+tex(P['github'])+'}{GitHub: '+tex(P['git
 if P['email']:
     contact.insert(0,r'\href{mailto:'+tex(P['email'])+'}{'+tex(P['email'])+'}')
 contact.append(r'\href{'+tex(P['website'])+'}{'+tex(P['website'].removeprefix('https://').rstrip('/'))+'}')
-chunks = [r'''\documentclass[11pt,a4paper]{article}
-\usepackage[top=17mm,bottom=17mm,left=16mm,right=16mm]{geometry}
+chunks = [r'''\documentclass[10pt,a4paper]{article}
+\usepackage[top=14mm,bottom=14mm,left=16mm,right=16mm]{geometry}
 \usepackage{fontspec}
 \IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
 \usepackage[dvipsnames]{xcolor}
@@ -142,8 +148,8 @@ chunks = [r'''\documentclass[11pt,a4paper]{article}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{0pt}
 \titleformat{\section}{\large\scshape\bfseries}{}{0pt}{}[\vspace{2pt}\titlerule]
-\titlespacing*{\section}{0pt}{12pt}{8pt}
-\setlist[itemize]{leftmargin=14pt,itemsep=2pt,topsep=3pt,parsep=0pt}
+\titlespacing*{\section}{0pt}{10pt}{6pt}
+\setlist[itemize]{leftmargin=14pt,itemsep=1pt,topsep=2pt,parsep=0pt}
 \newcommand{\entry}[3]{\needspace{4\baselineskip}\begin{tabularx}{\linewidth}{@{}X r@{}}\textbf{#1}&\textit{#2}\\\end{tabularx}\if\relax\detokenize{#3}\relax\par\else\vspace{-2pt}\\\textit{#3}\par\fi}
 \begin{document}
 \begin{center}
@@ -175,12 +181,12 @@ if P['publications'] or P.get('manuscripts'):
         chunks.append(r'\item[{['+tex(manuscript['label'])+']}] '+authors+'. '+r'\textbf{'+tex(manuscript['title'])+'}. '+tex(manuscript.get('relation',''))+' '+r'\textit{'+tex(manuscript['status'])+'}.\n')
     chunks.append(r'\end{description}'+'\n')
 if P['projects']:
-    chunks.append(r'\section{Research Projects}'+'\n')
+    chunks.append(r'\needspace{12\baselineskip}\section{Selected Projects}'+'\n')
     for project in P['projects']:
-        chunks.append(r'\textbf{'+tex(project['title'])+r'}\par '+tex(project['description'])+'\n'+tex_details(project.get('details',[]))+r'\vspace{7pt}'+'\n')
+        chunks.append(r'\entry{'+tex(project['title'])+'}{'+tex(project['dates'])+'}{'+tex(project['role'])+'}\n'+tex_details(project.get('details',[]))+r'\href{'+tex(P['website']+project['url'])+r'}{Project photos and demonstration videos}\par\vspace{7pt}'+'\n')
 chunks.append(r'\section{Honors and Awards}'+'\n')
 for a in P['awards']:
-    chunks.append(r'\entry{'+tex(a['title'])+'}{'+tex(a['date'])+'}{'+tex(a['event'])+'}\n'+tex(a['organization'])+r'\par\vspace{6pt}'+'\n')
+    chunks.append(r'\entry{'+tex(a['title'])+'}{'+tex(a['date'])+'}{}\n'+tex(a['event'])+' · '+tex(a['organization'])+r'\par\vspace{4pt}'+'\n')
 if P['skills'] or P['research_interests'] or P['languages']:
     chunks.append(r'\section{Additional Information}'+'\n')
     for label,items in [('Research interests',P['research_interests']),('Technical skills',P['skills']),('Languages',P['languages'])]:

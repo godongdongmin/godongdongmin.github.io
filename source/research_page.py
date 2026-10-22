@@ -31,6 +31,27 @@ def site_navigation(active, home_url, research_url):
     )
     return f'<header class="topbar"><nav class="nav site-nav" aria-label="Main navigation"><div class="nav-links">{links}</div></nav></header>'
 
+def build_selected_project(site, profile, project):
+    dest = site/project['url']
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    contributions = ''.join(f'<li>{h(detail)}</li>' for detail in project['details'])
+    videos = ''
+    for video in project['videos']:
+        portrait = ' ces-video-portrait' if video['portrait'] else ''
+        videos += f'''<figure class="ces-demo" id="{h(video['id'])}"><h3>{h(video['title'])}</h3><video class="project-video{portrait}" controls playsinline preload="metadata" poster="../../{h(video['poster'])}" aria-label="{h(video['title'])}" aria-describedby="{h(video['id'])}-caption"><source src="../../{h(video['url'])}" type="video/mp4">Your browser does not support embedded video. <a href="../../{h(video['url'])}">Download the video</a>.</video><figcaption class="media-caption" id="{h(video['id'])}-caption">{h(video['caption'])}</figcaption></figure>'''
+    page = f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{h(project['title'])} | {h(profile['name'])}</title><meta name="description" content="{h(project['description'])}">
+<link rel="stylesheet" href="{stylesheet_href(site, '../../')}"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><link rel="canonical" href="{h(profile['website']+project['url'])}">
+<meta property="og:title" content="{h(project['title'])}"><meta property="og:description" content="{h(project['description'])}"><meta property="og:image" content="{h(profile['website']+project['thumbnail'])}"><meta property="og:type" content="website">
+</head><body class="project-page"><a class="skip" href="#main">Skip to content</a>{site_navigation('home','../../index.html','../../research/index.html')}
+<main class="project-main ces-main" id="main"><p class="project-back"><a href="../../index.html#projects">← Selected Projects</a></p><header class="project-header"><p class="eyebrow">SELECTED PROJECT · CES 2025</p><h1>{h(project['title'])}</h1><p class="project-authors">{h(project['role'])}</p></header>
+<section class="section ces-overview" aria-labelledby="overview-heading"><figure class="ces-photo"><a href="../../{h(project['thumbnail'])}"><img src="../../{h(project['thumbnail'])}" alt="{h(project['photo_alt'])}" width="1080" height="1472"></a><figcaption class="media-caption">H-MEDI demonstration at CES 2025.</figcaption></figure><div><h2 id="overview-heading">From algorithm to live demonstration</h2><p>{h(project['description'])}</p><h3>My contributions</h3><ul class="ces-contributions">{contributions}</ul><p class="section-note">The high-level controller recognized motion-state changes and generated target assistance forces appropriate to the current activity.</p></div></section>
+<section class="section" id="demonstrations"><h2>Demonstrations</h2><p>On-site footage of sitting, standing, and walking with the H-MEDI wearable robot.</p><div class="ces-demos">{videos}</div></section>
+</main><footer class="footer"><a href="../../index.html#projects">← Selected Projects</a><span>{h(profile['name'])} · {h(profile['updated'])}</span></footer></body></html>'''
+    dest.write_text(page, encoding='utf-8')
+
+
 def build_research_index(site, profile):
     dest = site/'research'
     dest.mkdir(parents=True, exist_ok=True)

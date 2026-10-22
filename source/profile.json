@@ -95,7 +95,40 @@
       "video_url": "files/myomimetic-exosuit-video.mp4"
     }
   ],
-  "projects": [],
+  "projects": [
+    {
+      "id": "ces-2025",
+      "title": "H-MEDI Wearable Robot at CES 2025",
+      "dates": "2025",
+      "role": "High-Level Control Algorithm Development & Live Demonstration",
+      "description": "Motion-aware assistance for a rehabilitation-assist wearable robot, from high-level control development and integration to live demonstrations at CES 2025.",
+      "details": [
+        "Developed and integrated motion-state recognition and target assistance-force generation for walking, stopping, and transitions between sitting and standing.",
+        "Operated live demonstrations, responded to unexpected on-site situations, and managed the robot and batteries between demonstrations."
+      ],
+      "url": "projects/ces-2025/index.html",
+      "thumbnail": "assets/ces-2025-booth.jpg",
+      "photo_alt": "H-MEDI wearable robot demonstration with a seated participant and booth operators at CES 2025",
+      "videos": [
+        {
+          "id": "sit-to-stand",
+          "title": "Sitting and standing demonstration",
+          "url": "files/ces-2025-sit-to-stand.mp4",
+          "poster": "assets/ces-2025-sts-poster.jpg",
+          "portrait": true,
+          "caption": "6 sec · A participant sits down and stands up while wearing the H-MEDI robot, with an operator nearby."
+        },
+        {
+          "id": "walking",
+          "title": "Walking demonstration",
+          "url": "files/ces-2025-walking.mp4",
+          "poster": "assets/ces-2025-walking-poster.jpg",
+          "portrait": false,
+          "caption": "12 sec · Walking and turning in the exhibition booth while wearing the H-MEDI robot."
+        }
+      ]
+    }
+  ],
   "awards": [
     {
       "title": "Excellence Award",
@@ -116,5 +149,5 @@
   ],
   "skills": [],
   "languages": [],
-  "updated": "September 2026"
+  "updated": "October 2026"
 }

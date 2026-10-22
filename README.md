@@ -34,6 +34,8 @@ CV는 Times New Roman이 설치되어 있으면 사용하고, 없으면 TeX Gyre
 | `assets/myomimetic-poster.jpg` | 공개 영상 포스터 |
 | `assets/myomimetic-exosuit/` | 연구 상세 페이지의 공개 그림 8개 (PNG) |
 | `files/myomimetic-exosuit-video.mp4` | 공개 연구 영상 |
+| `assets/ces-2025-*.jpg` | CES 프로젝트 사진과 영상 포스터 |
+| `files/ces-2025-*.mp4` | CES 시연 영상 2개 (H.264/AAC) |
 | `inbox/` | 수정에 참고할 자료를 넣는 로컬 작업 공간 |
 | `_build/`, `output/` | 생성된 중간 파일과 배포 ZIP; Git에서 제외 |
 
@@ -42,6 +44,8 @@ CV는 Times New Roman이 설치되어 있으면 사용하고, 없으면 TeX Gyre
 상단 Home / Research 메뉴는 각각 `index.html`, `research/index.html`로 이동하며 현재 페이지를 표시합니다. 홈 About Me 첫 문단은 `summary`(현재 업무·석사 연구실)와 `homepage_interest_statement`(문장형 연구 관심사)를 연결하고, 둘째 문단은 `background`(이전 이력)를 사용합니다. Research 페이지의 관심사 목록은 `homepage_interests`에서 관리하며 CV 관심사와 별도입니다. 홈 하단은 Education을 왼쪽에, Experience와 Honors & Awards를 오른쪽에 각각 구분해 표시합니다. 좁은 화면에서는 세 영역이 세로로 이어집니다. 각 영역은 프로필 데이터의 최신순 배열과 기존 날짜 표기를 유지합니다. `role`은 CV의 직무명이며 홈페이지는 `homepage_role`이 있으면 이를 사용합니다. HUROTICS 직무명은 두 곳 모두 Wearable Robotics Software Engineer로 통일합니다. 홈의 Video 링크는 Research 페이지의 영상으로 연결됩니다. 연구 이미지·영상·설명은 `source/research_page.py`와 공개 미디어 경로에서 편집합니다.
 
 ## 자료를 넣고 반영하기
+
+CV와 홈의 **Selected Projects**는 `source/profile.json`의 `projects`에서 관리합니다. CES 2025 경험은 HUROTICS 재직 이력과 별도 프로젝트로 표시합니다. `projects/ces-2025/index.html`은 사진과 영상이 포함된 생성 페이지이며, 렌더러는 `source/research_page.py`에 있습니다. CV는 한 페이지로 구성하고 프로젝트 상세 페이지로 연결합니다.
 
 1. 새 자료를 `inbox/awards`, `education`, `photos`, `research`, `references`, `notes` 중 알맞은 폴더에 넣습니다.
 2. 자료에서 **공개할 내용만** 골라 `source/profile.json` 등에 반영합니다. 자료를 넣는 것만으로 내용이 자동 변환되지는 않습니다. 편집 도구나 작업자에게 해당 경로와 반영할 내용을 알려주세요.
@@ -74,7 +78,7 @@ HTML만 수정하고 기존 PDF를 유지하려면 `python source/build.py --sit
 ```sh
 git status --short
 git diff
-git add source assets files index.html research README.md AGENTS.md .gitignore .gitattributes inbox
+git add source assets files index.html research projects README.md AGENTS.md .gitignore .gitattributes inbox
 git diff --cached --stat
 git commit -m "Update CV and homepage"
 git push origin main

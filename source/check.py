@@ -27,12 +27,14 @@ class Links(HTMLParser):
             if key in ('href', 'src', 'poster') and value:
                 self.paths.append(value)
 
-for relative in ('index.html', 'research/index.html', 'research/myomimetic-exosuit/index.html'):
+pages = {'index.html': 0, 'research/index.html': 1, 'research/myomimetic-exosuit/index.html': 1}
+pages.update({p['url']: len(p['videos']) for p in profile['projects']})
+for relative, video_count in pages.items():
     page = ROOT/relative
     text = page.read_text(encoding='utf-8')
     parser = Links()
     parser.feed(text)
-    assert parser.videos == (0 if relative == 'index.html' else 1), f'Unexpected video layout in {relative}'
+    assert parser.videos == video_count, f'Unexpected video layout in {relative}'
     assert text.count('aria-current="page"') == 1, f'Missing active navigation in {relative}'
     assert 'class="brand"' not in text, f'Duplicate name in navigation: {relative}'
     if relative == 'index.html':
@@ -76,5 +78,10 @@ if archive.exists():
         assert not any(p.startswith(('inbox/', 'source/', '_build/', '.git/')) for p in z.namelist())
         assert not any('draft.pdf' in p for p in z.namelist())
         assert z.read('files/Dongmin_Go_CV.pdf') == (ROOT/'files/Dongmin_Go_CV.pdf').read_bytes()
+        for project in profile['projects']:
+            media = [project['url'], project['thumbnail']]
+            media += [v[key] for v in project['videos'] for key in ('url', 'poster')]
+            for path in media:
+                assert z.read(path) == (ROOT/path).read_bytes(), f'Missing or stale project asset: {path}'
 assert (ROOT/'files/Dongmin_Go_CV.pdf').read_bytes().startswith(b'%PDF-')
 print('OK: Home/Research pages, video links, public data, ignored inputs, and deployment package.')
