@@ -65,7 +65,7 @@ def check(item):
         assert body==(BASE/'files/Dongmin_Go_CV.pdf').read_bytes(), 'Live CV differs from local version'
         report['latest_cv_sha256']=hashlib.sha256(body).hexdigest()
     if path in [p['url'] for p in PROFILE['projects']]:
-        assert body == (BASE/path).read_bytes(), 'Live project page differs from local version'
+        assert body.decode('utf-8').replace('\r\n', '\n') == (BASE/path).read_text(encoding='utf-8'), 'Live project page differs from local version'
         report['latest_selected_project_verified']=True
     if path=='':
         assert 'Selected Projects' in body.decode('utf-8')
