@@ -80,6 +80,7 @@ if archive.exists():
         assert z.read('files/Dongmin_Go_CV.pdf') == (ROOT/'files/Dongmin_Go_CV.pdf').read_bytes()
         for project in profile['projects']:
             media = [project['url'], project['thumbnail']]
+            media += [figure['url'] for figure in project.get('figures', [])]
             media += [v[key] for v in project['videos'] for key in ('url', 'poster')]
             for path in media:
                 assert z.read(path) == (ROOT/path).read_bytes(), f'Missing or stale project asset: {path}'

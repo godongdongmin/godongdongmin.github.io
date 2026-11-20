@@ -32,6 +32,8 @@ def site_navigation(active, home_url, research_url):
     return f'<header class="topbar"><nav class="nav site-nav" aria-label="Main navigation"><div class="nav-links">{links}</div></nav></header>'
 
 def build_selected_project(site, profile, project):
+    if project['id'] == 'ai-sapiens-k1':
+        return build_k1_project(site, profile, project)
     dest = site/project['url']
     dest.parent.mkdir(parents=True, exist_ok=True)
     contributions = ''.join(f'<li>{h(detail)}</li>' for detail in project['details'])
@@ -49,6 +51,40 @@ def build_selected_project(site, profile, project):
 <section class="section ces-overview" aria-labelledby="overview-heading"><figure class="ces-photo"><a href="../../{h(project['thumbnail'])}"><img src="../../{h(project['thumbnail'])}" alt="{h(project['photo_alt'])}" width="1080" height="1472"></a><figcaption class="media-caption">H-MEDI demonstration at CES 2025.</figcaption></figure><div><h2 id="overview-heading">From algorithm to live demonstration</h2><p>{h(project['description'])}</p><h3>My contributions</h3><ul class="ces-contributions">{contributions}</ul><p class="section-note">The high-level controller recognized motion-state changes and generated target assistance forces appropriate to the current activity.</p></div></section>
 <section class="section" id="demonstrations"><h2>Demonstrations</h2><p>On-site footage of sitting, standing, and walking with the H-MEDI wearable robot.</p><div class="ces-demos">{videos}</div></section>
 </main><footer class="footer"><a href="../../index.html#projects">← Selected Projects</a><span>{h(profile['name'])} · {h(profile['updated'])}</span></footer></body></html>'''
+    dest.write_text(page, encoding='utf-8')
+
+
+def build_k1_project(site, profile, project):
+    dest = site/project['url']
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    contributions = ''.join(f'<li>{h(detail)}</li>' for detail in project['details'])
+    figures = []
+    for figure in project['figures']:
+        src = '../../' + h(figure['url'])
+        figures.append(f'<figure class="study-figure"><a href="{src}" target="_blank" rel="noopener" aria-label="{h(figure["alt"])}; open full-size image"><img src="{src}" alt="{h(figure["alt"])}" loading="lazy" decoding="async"></a><figcaption>{h(figure["caption"])}</figcaption></figure>')
+    videos = ''.join(f'<figure class="ces-demo" id="{h(v["id"])}"><h3>{h(v["title"])}</h3><video class="project-video" controls playsinline preload="metadata" poster="../../{h(v["poster"])}" aria-label="{h(v["title"])} simulation rollout"><source src="../../{h(v["url"])}" type="video/mp4">Your browser does not support embedded video. <a href="../../{h(v["url"])}">Download video</a>.</video><figcaption class="media-caption">{h(v["caption"])}</figcaption></figure>' for v in project['videos'])
+    rows = ''
+    for label, metric, unit in [('Planar velocity RMSE', 'xy_rmse', 'm/s'), ('Yaw-rate RMSE', 'yaw_rmse', 'rad/s')]:
+        values = [project['results'][alg][metric] for alg in ('PPO', 'FastSAC')]
+        rows += f'<tr><th scope="row">{label} ({unit})</th>' + ''.join(f'<td>{v["mean"]:.4f} ± {v["sd"]:.4f}</td>' for v in values) + '</tr>'
+    milestone = project['survival_milestone']
+    milestone_cells = ''.join(f'<td>{milestone["algorithms"][alg]["mean_minutes"]:.1f} ± {milestone["algorithms"][alg]["sd_minutes"]:.1f} min</td>' for alg in ('PPO', 'FastSAC'))
+    reduction = 100 * (1 - milestone['algorithms']['FastSAC']['mean_minutes'] / milestone['algorithms']['PPO']['mean_minutes'])
+    page = f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{h(project['title'])} | {h(profile['name'])}</title><meta name="description" content="{h(project['description'])}">
+<link rel="stylesheet" href="{stylesheet_href(site, '../../')}"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><link rel="canonical" href="{h(profile['website']+project['url'])}">
+<meta property="og:title" content="{h(project['title'])}"><meta property="og:description" content="{h(project['description'])}"><meta property="og:image" content="{h(profile['website']+project['thumbnail'])}"><meta property="og:type" content="website">
+</head><body class="project-page"><a class="skip" href="#main">Skip to content</a>{site_navigation('home','../../index.html','../../research/index.html')}
+<main class="project-main k1-main" id="main"><p class="project-back"><a href="../../index.html#projects">Selected Projects</a></p>
+<header class="project-header"><p class="eyebrow">SELECTED PROJECT · 2026</p><h1>{h(project['title'])}</h1><p class="project-authors">{h(project['role'])}</p><p>Isaac Lab / Cyclo Lab · Simulation study</p></header>
+<section class="section" id="motivation"><h2>From human walking models to humanoid locomotion</h2><p>My master's research combined a human walking model and a wearable robot in a shared learning environment, followed by deployment of the robot policy to real hardware. This project extended that experience to the AI Sapiens K1 humanoid and explored how an off-policy learning method performs in a new robot and simulator.</p><p>I used the PPO baseline in ROBOTIS Cyclo Lab and adapted FastSAC to the same locomotion task. The K1 work reported here was conducted in simulation.</p><h3>My contributions</h3><ul class="ces-contributions">{contributions}</ul></section>
+<section class="section" id="evaluation"><h2>Training and evaluation</h2><p>Both methods used the same K1 model and task settings, with five training seeds per method. Comparisons used a common 5.5-hour wall-clock budget, including initialization, logging, and checkpoint saving.</p><p>For each run, six checkpoints near the end of the budget were evaluated under identical validation conditions. One checkpoint was selected per run by survival, followed by velocity tracking error. The selected policies were then tested with separate evaluation seeds and matched initial states: eight commands, sixteen initial states, and three evaluation seeds, for 384 episodes per policy.</p><p class="section-note">Evaluation used deterministic policies with frozen observation normalization. These are flat-ground simulation results without external pushes; rough-terrain and K1 hardware transfer were not evaluated.</p></section>
+<section class="section" id="learning"><h2>Time to reach and sustain 95% episode duration</h2><p>FastSAC reduced the training time needed to reach <strong>95% of the maximum episode duration</strong> and sustain it for <strong>5 min</strong> by <strong>{reduction:.1f}%</strong> relative to PPO.</p><table class="results-table"><caption>Time to first meet the duration and hold requirements. Mean ± sample standard deviation across five training seeds.</caption><thead><tr><th scope="col">Training milestone</th><th scope="col">PPO</th><th scope="col">FastSAC</th></tr></thead><tbody><tr><th scope="row">95% of maximum episode duration, held for 5 min</th>{milestone_cells}</tr></tbody></table><p class="section-note">Each run was evaluated separately using a 60 s trailing mean. The reported time includes the five-minute hold and is averaged across seeds; it is not the threshold crossing of the plotted mean curve. This is a post-hoc learning-speed measure. Later regressions in some FastSAC runs mean it does not establish lasting convergence.</p><p>FastSAC also showed faster early reward improvement. Validation-based checkpoint selection accounted for the later performance fluctuations.</p><div class="figure-pair k1-figures">{''.join(figures[:2])}</div></section>
+<section class="section" id="results"><h2>Held-out velocity tracking</h2><p>FastSAC reduced mean planar velocity tracking RMSE by <strong>22.8%</strong> relative to PPO under the shared training-time budget.</p><table class="results-table"><caption>Mean ± sample standard deviation across five training seeds. Lower is better.</caption><thead><tr><th scope="col">Metric</th><th scope="col">PPO</th><th scope="col">FastSAC</th></tr></thead><tbody>{rows}</tbody></table><div class="figure-pair k1-figures">{''.join(figures[2:])}</div><p class="section-note">Tracking RMSE excludes the first two seconds and uses observations until episode termination. One episode per method ended before the tracking window and was excluded from RMSE. These measurements describe the tested simulation conditions, not general hardware performance.</p></section>
+<section class="section" id="demonstrations"><h2>Simulation rollouts</h2><div class="k1-videos">{videos}</div></section>
+<section class="section" id="references"><h2>Project foundations</h2><p><a href="https://github.com/ROBOTIS-GIT/cyclo_lab">ROBOTIS Cyclo Lab</a> provided the K1 simulation task and PPO baseline. The off-policy adaptation was informed by <a href="https://arxiv.org/abs/2512.01996">Learning Sim-to-Real Humanoid Locomotion in 15 Minutes</a> (FastSAC). This project applies the method to K1 under the conditions described above.</p></section>
+</main><footer class="footer"><a href="../../index.html#projects">Selected Projects</a><span>{h(profile['name'])} · {h(profile['updated'])}</span></footer></body></html>'''
     dest.write_text(page, encoding='utf-8')
 
 

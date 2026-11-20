@@ -55,9 +55,9 @@ try{
     await call('Network.setCacheDisabled',{cacheDisabled:true});
   }
   const reports=[];
-  for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['research-desktop',1440,1200],['research-mobile',390,844],['research-narrow',320,760],['project-desktop',1440,1200],['project-wide',1920,1080],['project-laptop',1280,800],['project-tablet',768,1024],['project-mobile',390,844],['project-narrow',320,760],['ces-desktop',1440,1200],['ces-mobile',390,844],['ces-narrow',320,760]]){
+  for(const [name,width,height] of [['desktop',1440,1200],['mobile',390,844],['narrow',320,760],['research-desktop',1440,1200],['research-mobile',390,844],['research-narrow',320,760],['project-desktop',1440,1200],['project-wide',1920,1080],['project-laptop',1280,800],['project-tablet',768,1024],['project-mobile',390,844],['project-narrow',320,760],['ces-desktop',1440,1200],['ces-mobile',390,844],['ces-narrow',320,760],['k1-desktop',1440,1200],['k1-mobile',390,844],['k1-narrow',320,760]]){
     await call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
-    const localPage=name.startsWith('ces-')?'projects/ces-2025/index.html':name.startsWith('project-')?'research/myomimetic-exosuit/index.html':name.startsWith('research-')?'research/index.html':'index.html';
+    const localPage=name.startsWith('k1-')?'projects/ai-sapiens-k1/index.html':name.startsWith('ces-')?'projects/ces-2025/index.html':name.startsWith('project-')?'research/myomimetic-exosuit/index.html':name.startsWith('research-')?'research/index.html':'index.html';
     await call('Page.navigate',{url:siteOrigin?new URL(localPage,siteOrigin).href:pathToFileURL(join(base,localPage)).href});
     for(let n=0;n<40;n++){
       const ready=await call('Runtime.evaluate',{expression:'document.readyState',returnByValue:true});
@@ -75,7 +75,7 @@ try{
     const navigation=await call('Runtime.evaluate',{expression:`JSON.stringify({links:[...document.querySelectorAll('nav a')].map(a=>({text:a.textContent,href:a.getAttribute('href')})),active:document.querySelector('nav [aria-current="page"]')?.textContent,videos:document.querySelectorAll('video').length})`,returnByValue:true});
     audit.navigation=JSON.parse(navigation.result.value);
     const isHome=localPage==='index.html';
-    const isSelected=name.startsWith('ces-');
+    const isSelected=name.startsWith('ces-')||name.startsWith('k1-');
     if(audit.navigation.links.map(a=>a.text).join(',')!=='Home,Research'||audit.navigation.active!==((isHome||isSelected)?'Home':'Research')||audit.navigation.videos!==(isHome?0:isSelected?2:1))throw new Error('Unexpected navigation/video structure: '+name);
     if(isSelected){
       const playback=await call('Runtime.evaluate',{expression:`(async()=>{const results=[];for(const v of document.querySelectorAll('video')){v.muted=true;await v.play();await new Promise(r=>setTimeout(r,500));results.push({duration:v.duration,width:v.videoWidth,height:v.videoHeight,playing:!v.paused,currentTime:v.currentTime,error:v.error?.message??null});v.pause();v.currentTime=0;}return results;})()`,awaitPromise:true,returnByValue:true});

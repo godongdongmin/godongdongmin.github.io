@@ -16,6 +16,7 @@ TARGETS=[('', 'GET'),('research/', 'GET'),('research/myomimetic-exosuit/', 'GET'
          ('assets/portrait.jpg','HEAD'),('assets/myomimetic-poster.jpg','HEAD')]
 for project in PROFILE['projects']:
     TARGETS += [(project['url'], 'GET'), (project['thumbnail'], 'HEAD')]
+    TARGETS += [(figure['url'], 'HEAD') for figure in project.get('figures', [])]
     TARGETS += [(v[key], 'HEAD') for v in project['videos'] for key in ('url', 'poster')]
 def check(item):
     path,method=item

@@ -67,7 +67,7 @@ for pub in P['publications']:
     links = ''.join(f'<a href="{h(url)}">{h(label)}</a>' for label,url in pub.get('links',{}).items())
     authors = h(pub['authors']).replace(h(P['name']), '<strong>'+h(P['name'])+'</strong>')
     publications += f'<article class="entry"><h3 class="publication-title">[{h(pub["label"])}] {title}</h3><p>{authors}</p><p class="detail">{h(pub["venue"])} · {h(pub["citation_details"])}</p><div class="publication-links">{links}</div></article>'
-projects = ''.join(f'<article class="entry selected-project"><a class="selected-project-photo" href="{h(p["url"])}"><img src="{h(p["thumbnail"])}" alt="{h(p["photo_alt"])}" width="1080" height="1472" loading="lazy"></a><div><h3><a href="{h(p["url"])}">{h(p["title"])}</a></h3><p class="project-role">{h(p["role"])}</p><p>{h(p["description"])}</p><p class="selected-project-link"><a href="{h(p["url"])}">Project details, photos &amp; videos <span aria-hidden="true">→</span></a></p></div></article>' for p in P['projects'])
+projects = ''.join(f'<article class="entry selected-project"><a class="selected-project-photo" href="{h(p["url"])}"><img src="{h(p["thumbnail"])}" alt="{h(p["photo_alt"])}" width="{p.get("thumbnail_width", 1080)}" height="{p.get("thumbnail_height", 1472)}" loading="lazy"></a><div><h3><a href="{h(p["url"])}">{h(p["title"])}</a></h3><p class="project-role">{h(p["role"])}</p><p>{h(p["description"])}</p><p class="selected-project-link"><a href="{h(p["url"])}">{h(p.get("link_label", "Project details, photos & videos"))} <span aria-hidden="true">→</span></a></p></div></article>' for p in P['projects'])
 manuscripts = ''
 for m in P.get('manuscripts',[]):
     authors = h(m.get('authors','')).replace(h(P['name']),'<strong>'+h(P['name'])+'</strong>')
@@ -117,10 +117,11 @@ def package_site():
     deploy_files += [f'assets/myomimetic-exosuit/{name}.png' for name in RESEARCH_FIGURES]
     for project in P['projects']:
         deploy_files += [project['url'], project['thumbnail']]
+        deploy_files += [figure['url'] for figure in project.get('figures', [])]
         for video in project['videos']:
             deploy_files += [video['url'], video['poster']]
     with zipfile.ZipFile(OUTPUT/'godongdongmin.github.io.zip','w',zipfile.ZIP_DEFLATED) as archive:
-        for relative in deploy_files:
+        for relative in dict.fromkeys(deploy_files):
             archive.write(SITE/relative,relative)
 
 if '--site-only' in sys.argv:
@@ -148,7 +149,7 @@ chunks = [r'''\documentclass[10pt,a4paper]{article}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{0pt}
 \titleformat{\section}{\large\scshape\bfseries}{}{0pt}{}[\vspace{2pt}\titlerule]
-\titlespacing*{\section}{0pt}{10pt}{6pt}
+\titlespacing*{\section}{0pt}{8pt}{5pt}
 \setlist[itemize]{leftmargin=14pt,itemsep=1pt,topsep=2pt,parsep=0pt}
 \newcommand{\entry}[3]{\needspace{4\baselineskip}\begin{tabularx}{\linewidth}{@{}X r@{}}\textbf{#1}&\textit{#2}\\\end{tabularx}\if\relax\detokenize{#3}\relax\par\else\vspace{-2pt}\\\textit{#3}\par\fi}
 \begin{document}
@@ -169,7 +170,7 @@ for e in P['education']:
 if P['publications'] or P.get('manuscripts'):
     chunks.append(r'\section{Publications}'+'\n')
     chunks.append(r'{\small\itshape J = Journal, C = Conference, T = Thesis, S = Submitted manuscript}\par\vspace{6pt}'+'\n')
-    chunks.append(r'\begin{description}[leftmargin=32pt,labelwidth=28pt,labelsep=4pt,font=\normalfont,itemsep=7pt,parsep=0pt,topsep=0pt]'+'\n')
+    chunks.append(r'\begin{description}[leftmargin=32pt,labelwidth=28pt,labelsep=4pt,font=\normalfont,itemsep=5pt,parsep=0pt,topsep=0pt]'+'\n')
     for i,pub in enumerate(P['publications'],1):
         title = r'\textbf{'+tex(pub['title'])+'}'
         if pub.get('url'):
@@ -183,7 +184,8 @@ if P['publications'] or P.get('manuscripts'):
 if P['projects']:
     chunks.append(r'\needspace{12\baselineskip}\section{Selected Projects}'+'\n')
     for project in P['projects']:
-        chunks.append(r'\entry{'+tex(project['title'])+'}{'+tex(project['dates'])+'}{'+tex(project['role'])+'}\n'+tex_details(project.get('details',[]))+r'\href{'+tex(P['website']+project['url'])+r'}{Project photos and demonstration videos}\par\vspace{7pt}'+'\n')
+        title = r'\href{'+tex(P['website']+project['url'])+'}{'+tex(project['title'])+'}'
+        chunks.append(r'\entry{'+title+'}{'+tex(project['dates'])+'}{'+tex(project['role'])+'}\n'+tex_details(project.get('cv_details', project.get('details',[])))+r'\vspace{4pt}'+'\n')
 chunks.append(r'\section{Honors and Awards}'+'\n')
 for a in P['awards']:
     chunks.append(r'\entry{'+tex(a['title'])+'}{'+tex(a['date'])+'}{}\n'+tex(a['event'])+' · '+tex(a['organization'])+r'\par\vspace{4pt}'+'\n')

@@ -47,6 +47,8 @@ CV는 Times New Roman이 설치되어 있으면 사용하고, 없으면 TeX Gyre
 
 CV와 홈의 **Selected Projects**는 `source/profile.json`의 `projects`에서 관리합니다. CES 2025 경험은 HUROTICS 재직 이력과 별도 프로젝트로 표시합니다. `projects/ces-2025/index.html`은 사진과 영상이 포함된 생성 페이지이며, 렌더러는 `source/research_page.py`에 있습니다. CV는 한 페이지로 구성하고 프로젝트 상세 페이지로 연결합니다.
 
+AI Sapiens K1 프로젝트는 `projects/ai-sapiens-k1/index.html`에 생성됩니다. 공개 그림과 영상 포스터는 `assets/ai-sapiens-k1/`, 시뮬레이션 영상은 `files/k1-*.mp4`에서 관리합니다. 프로젝트의 `details`는 상세 페이지에, 선택적인 `cv_details`는 1페이지 CV에 사용하며 CV의 프로젝트 제목을 누르면 상세 페이지로 연결됩니다. K1 결과는 동일 5.5시간 예산과 방법별 학습 seed 5개를 사용한 시뮬레이션 비교입니다.
+
 1. 새 자료를 `inbox/awards`, `education`, `photos`, `research`, `references`, `notes` 중 알맞은 폴더에 넣습니다.
 2. 자료에서 **공개할 내용만** 골라 `source/profile.json` 등에 반영합니다. 자료를 넣는 것만으로 내용이 자동 변환되지는 않습니다. 편집 도구나 작업자에게 해당 경로와 반영할 내용을 알려주세요.
 3. 사진·영상을 공개하려는 경우에만 `assets/` 또는 `files/`의 운영 파일을 교체합니다.
