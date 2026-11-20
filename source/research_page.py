@@ -8,14 +8,14 @@ def stylesheet_href(site, prefix):
     return f'{prefix}assets/style.css?v={version}'
 
 RESEARCH_FIGURES = {
-    'system': (2000, 778),
-    'networks': (2000, 908),
-    'setup': (2000, 990),
-    'critic_ablation_1col': (2000, 1905),
-    'layer2_effort_1col': (2000, 1461),
-    'layer3_GM_1col': (1537, 2000),
-    'sim_effort_1col': (1727, 2000),
-    'layer3_scatter_1col': (2000, 1500),
+    'system': (2000, 794),
+    'networks': (2000, 930),
+    'setup': (2000, 1275),
+    'critic_ablation_1col': (1531, 2000),
+    'layer2_effort_1col': (2000, 1881),
+    'layer3_GM_1col': (1787, 2000),
+    'sim_effort_1col': (2000, 1626),
+    'layer3_scatter_1col': (1726, 2000),
 }
 
 def research_figure(name, alt, caption, compact=False):
@@ -60,7 +60,7 @@ def build_research_index(site, profile):
         authors = h(m['authors']).replace(h(profile['name']),'<strong>'+h(profile['name'])+'</strong>')
         details = '../'+m['url']
         video = f'<video id="myomimetic-video" class="project-video" controls playsinline preload="metadata" poster="../{h(m["thumbnail"])}" aria-label="Research video: {h(m["title"])}"><source src="../{h(m["video_url"])}" type="video/mp4">Your browser does not support embedded video.</video>' if m.get('video_url') else ''
-        studies += f'''<article class="research-study"><p class="eyebrow">ONGOING RESEARCH</p><h2><a href="{h(details)}">{h(m['title'])}</a></h2><p class="authors">{authors}</p><p class="section-note">{h(m.get('relation',''))} {h(m['status'])}.</p><p class="study-summary">{h(m.get('description',''))}</p>{video}<p class="study-more"><a href="{h(details)}">Study details <span aria-hidden="true">→</span></a></p></article>'''
+        studies += f'''<article class="research-study"><p class="eyebrow">SUBMITTED MANUSCRIPT</p><h2><a href="{h(details)}">{h(m['title'])}</a></h2><p class="authors">{authors}</p><p class="section-note">{h(m.get('relation',''))} {h(m['status'])}.</p><p class="study-summary">{h(m.get('description',''))}</p>{video}<p class="study-more"><a href="{h(details)}">Study details <span aria-hidden="true">→</span></a></p></article>'''
     published = ''
     for p in profile['publications']:
         if not p['label'].startswith(('J.','C.')):
@@ -79,33 +79,34 @@ def build_research_page(site, profile, manuscript):
     dest = site/'research/myomimetic-exosuit'
     dest.mkdir(parents=True, exist_ok=True)
     authors = h(manuscript['authors']).replace(h(profile['name']),'<strong>'+h(profile['name'])+'</strong>')
-    thesis_note = f'<p class="section-note">This journal manuscript extends Dongmin Go\'s master\'s thesis, <em>{h(manuscript["thesis_title"])}</em> (Chung-Ang University, 2025). Work in progress; not yet submitted.</p>' if manuscript.get('thesis_title') else ''
+    thesis_note = f'<p class="section-note">This journal manuscript extends Dongmin Go\'s master\'s thesis, <em>{h(manuscript["thesis_title"])}</em> (Chung-Ang University, 2025).</p>' if manuscript.get('thesis_title') else ''
     page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Myomimetic Exosuit Assistance | {h(profile['name'])}</title>
-<meta name="description" content="A unified-critic multi-agent reinforcement learning framework connecting musculoskeletal simulation, embedded control, and hardware evaluation across three walking environments.">
+<title>{h(manuscript['title'])} | {h(profile['name'])}</title>
+<meta name="description" content="{h(manuscript['description'])}">
 <link rel="stylesheet" href="{stylesheet_href(site, '../../')}"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="{h(profile['website'])}research/myomimetic-exosuit/">
 </head><body class="project-page"><a class="skip" href="#main">Skip to content</a>
 {site_navigation('research','../../index.html','../index.html')}
-<main class="project-main" id="main"><header class="project-header"><p class="eyebrow">MANUSCRIPT IN PREPARATION</p><h1>{h(manuscript['title'])}</h1><p class="project-authors">{authors}</p><p class="project-affiliations">Chung-Ang University · HUROTICS</p></header>
-<section class="section" id="overview"><h2>Overview</h2>{thesis_note}<p>This study investigates how a shared critic shapes coordination between a simulated musculoskeletal model and a bilateral hip-extension exosuit. Both policies learn in a coupled physical environment, while only the exosuit policy is deployed on the real device.</p><p>The framework covers level walking, incline walking, and stair ascent without reference-motion tracking. On hardware, the controller uses IMU and past-action histories, without requiring terrain labels or muscle-state measurements.</p>
+<main class="project-main" id="main"><header class="project-header"><p class="eyebrow">SUBMITTED MANUSCRIPT</p><h1>{h(manuscript['title'])}</h1><p class="project-authors">{authors}</p><p class="project-affiliations">Chung-Ang University · HUROTICS</p><p class="section-note">{h(manuscript['status'])}.</p></header>
+<section class="section" id="overview"><h2>Overview</h2>{thesis_note}<p>This study tests whether modeling a wearer’s goal of unloading the assisted muscles as a shared human–exosuit reward brings simulated muscle responses closer to measured responses. Human and exosuit policies learn together under a unified critic, and the exosuit policy is deployed without further learning for comparison with surface EMG from seven participants.</p><p>The framework covers level walking, incline walking, and stair ascent without reference-motion tracking. On hardware, the controller uses IMU and past-action histories, without requiring terrain labels or muscle-state measurements.</p>
 {research_figure('system', 'System overview linking coupled musculoskeletal simulation to exosuit deployment across level walking, incline walking, and stair ascent.', 'System overview. Muscle and exosuit policies learn together in simulation; the exosuit policy is then deployed and evaluated across three terrains.')}
 <p class="figure-hint">Select any figure to view it at full resolution.</p>
-<div class="method-grid"><article><h3>Joint learning</h3><p>Centralized training with a unified critic and decentralized execution. A matched-actor, matched-reward comparison evaluates an independent-critic alternative.</p></article><article><h3>Embedded control</h3><p>Policy inference at 50 Hz on a Jetson Orin Nano. Force commands travel over CAN to the robot's 1 kHz low-level controller.</p></article><article><h3>Hardware evaluation</h3><p>Two reward variants, BASE and TGT, are compared with motor-off assistance in seven healthy participants across three environments.</p></article></div></section>
+<div class="method-grid"><article><h3>Shared muscle objective</h3><p>BASE includes aggregate muscle-effort reduction. TGT adds an assisted-muscle unloading term to the shared reward used by the human and exosuit policies.</p></article><article><h3>Embedded control</h3><p>Policy inference at a nominal 50 Hz on a Jetson Orin Nano. Force commands travel over CAN to the robot's 1 kHz low-level controller.</p></article><article><h3>Hardware evaluation</h3><p>Two reward variants, BASE and TGT, are compared with motor-off assistance in seven healthy participants across three environments.</p></article></div></section>
 <section class="section" id="architecture"><h2>Network Architecture</h2><p>The muscle and exosuit policies share a unified critic during training. The exosuit policy combines long and short histories of IMU observations and past actions, and the same policy is shared between the left and right sides.</p>
 {research_figure('networks', 'Muscle policy, unified critic, and shared bilateral exosuit policy with a dual-history encoder and hardware deployment pathway.', 'Network architecture. The exosuit policy uses 2 s and 80 ms histories; only this policy is transferred to hardware, followed by filtering and force scaling.')}</section>
 <section class="section" id="experimental-setup"><h2>Experimental Setup</h2><p>The wearable system combines an onboard inference computer, inertial sensors, and force sensing. EMG electrodes record activity from seven lower-limb muscles during the hardware evaluation.</p>
-{research_figure('setup', 'Exosuit hardware configuration and EMG electrode placement for GM, RF, VL, BF, TA, MG, and SOL.', 'Experimental setup. Left: robot components and sensor locations. Right: EMG electrode placement; the GM electrode is hidden by clothing.')}</section>
+{research_figure('setup', 'Exosuit hardware configuration and EMG electrode placement for GM, RF, VL, BF, TA, MG, and SOL.', 'Experimental setup. Left: robot components and sensor locations. Right: electrode placement for seven lower-limb muscles.')}</section>
 <section class="section" id="video"><h2>Supplementary Video</h2><video class="project-video" controls playsinline preload="metadata" poster="../../assets/myomimetic-poster.jpg" aria-describedby="video-description"><source src="../../files/myomimetic-exosuit-video.mp4" type="video/mp4">Your browser does not support embedded video. <a href="../../files/myomimetic-exosuit-video.mp4">Download the video</a>.</video><p class="media-caption" id="video-description">1 min 49 sec · Device configuration, policy inputs, the training and deployment framework, and a deployed test session. The video includes on-screen explanatory text.</p></section>
-<section class="section" id="results"><h2>Selected Findings</h2><p class="section-note">Results reported in the current draft.</p>
-<article class="finding" id="bilateral-work"><h3>Bilateral positive-work difference in simulation</h3><p class="finding-summary">Bilateral positive-work differences were <strong>4–14% with a unified critic</strong>, compared with <strong>22–49% with independent critics</strong>.</p>
-{research_figure('critic_ablation_1col', 'Unified versus independent critics: bilateral exosuit force profiles and positive-work differences across three terrains.', 'Critic ablation. Panel (a) compares right and left assistance-force profiles; panel (b) compares positive work. Solid and dashed lines distinguish the two sides.', compact=True)}</article>
-<article class="finding" id="measured-effort"><h3>EMG-derived aggregate effort versus motor-off</h3><p class="finding-summary">Across seven participants and three environments, aggregate effort decreased by <strong>15.5% with BASE</strong> and <strong>19.1% with TGT</strong> relative to motor-off.</p><p class="result-context">Both policies reduced aggregate effort relative to motor-off. The BASE–TGT difference in this measure was not statistically significant. These are EMG-derived muscle-effort results, not measurements of metabolic energy expenditure.</p>
-<div class="figure-pair">{research_figure('layer2_effort_1col', 'Measured normalized muscle effort for OFF, BASE, and TGT, pooled across terrains and separated by terrain, with seven participant traces.', 'Aggregate effort. Pooled and terrain-specific comparisons of OFF, BASE, and TGT, with individual participant responses.')}
-{research_figure('layer3_GM_1col', 'Measured and simulated gluteus maximus activation profiles and waveform overlap for OFF versus BASE and OFF versus TGT.', 'GM waveform comparison. Measured and simulated gluteus maximus activation and waveform overlap provide a muscle-specific view alongside the aggregate effort result.')}</div></article>
-<article class="finding" id="response-direction"><h3>Simulated–measured response direction</h3><p class="finding-summary">Simulated and measured changes agreed in direction for <strong>11/21 muscle–terrain combinations with BASE</strong> and <strong>17/21 with TGT</strong>.</p>
+<section class="section" id="results"><h2>Selected Findings</h2><p class="section-note">Selected results from the manuscript submitted to TNSRE.</p>
+
+<article class="finding" id="measured-effort"><h3>Aggregate sEMG index versus motor-off</h3><p class="finding-summary">After signal-quality screening, the aggregate sEMG index across seven participants and three environments decreased by <strong>11.9% with BASE</strong> and <strong>15.7% with TGT</strong> relative to motor-off.</p><p class="result-context">Both policies reduced the aggregate sEMG index relative to motor-off. The BASE–TGT difference in this measure was not statistically significant. The index is derived from muscle activity; metabolic energy expenditure was not measured.</p>
+<div class="figure-pair">{research_figure('layer2_effort_1col', 'Aggregate sEMG index for OFF, BASE, and TGT after signal-quality screening, pooled across terrains and separated by terrain.', 'Aggregate sEMG index. Pooled and terrain-specific comparisons of OFF, BASE, and TGT, with individual participant responses.')}
+{research_figure('layer3_GM_1col', 'Measured and simulated gluteus maximus activation profiles and waveform overlap for OFF versus BASE and OFF versus TGT.', 'GM waveform comparison. Measured and simulated gluteus maximus activation and change-area overlap provide a muscle-specific view alongside the aggregate sEMG index.')}</div></article>
+<article class="finding" id="response-direction"><h3>Simulated–measured response direction</h3><p class="finding-summary">Simulated and measured changes agreed in direction for <strong>12/21 muscle–terrain combinations with BASE</strong> and <strong>17/21 with TGT</strong>. Correlations between simulated and measured changes were −0.22 and 0.55, respectively.</p><p class="result-context">The between-policy difference in sign agreement was not statistically significant (p = .23).</p>
 <div class="figure-pair">{research_figure('sim_effort_1col', 'Simulated gluteus maximus activation and normalized muscle effort for OFF, BASE, and TGT across level, incline, and stair ascent.', 'Simulation results. GM activation profiles and normalized muscle effort across the three terrains provide context for the simulated responses.')}
-{research_figure('layer3_scatter_1col', 'Scatter plots comparing simulated and measured percentage changes, with same-sign agreement of 11 out of 21 for BASE and 17 out of 21 for TGT.', 'Simulation versus measurement. Each point represents a muscle–terrain combination; the plots compare the direction and magnitude of change from motor-off.')}</div></article></section>
+{research_figure('layer3_scatter_1col', 'Direction matrices and scatter plots comparing simulated and measured changes, with agreement of 12 out of 21 for BASE and 17 out of 21 for TGT.', 'Simulation versus measurement. Each point represents a muscle–terrain combination; the plots compare the direction and magnitude of change from motor-off.')}</div></article>
+<article class="finding" id="bilateral-work"><h3>Critic comparison in simulation</h3><p class="finding-summary">Under the same BASE reward and a common 2 Hz force-command filter, the two critic configurations produced different force and work patterns. Positive work exceeded negative-work magnitude with the unified policy on all three terrains.</p><p class="result-context">Each configuration was trained once, and muscle-effort changes did not favor one configuration across all terrains; this comparison does not establish that one critic provides greater assistance.</p>
+{research_figure('critic_ablation_1col', 'Unified versus independent critics: bilateral force profiles and positive and negative work across three terrains.', 'Critic ablation. Panel (a) compares right and left assistance-force profiles; panel (b) shows positive work above zero and negative work below zero. Solid and dashed force curves distinguish the two sides.', compact=True)}</article></section>
 </main><footer class="footer"><a href="../../index.html">← Back to homepage</a><span>{h(profile['name'])} · {h(profile['updated'])}</span></footer></body></html>'''
     (dest/'index.html').write_text(page,encoding='utf-8')

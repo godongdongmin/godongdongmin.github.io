@@ -82,16 +82,16 @@
   ],
   "manuscripts": [
     {
-      "title": "Myomimetic Exosuit Assistance Across Terrains via Unified-Critic Reinforcement Learning",
-      "label": "W.1",
-      "status": "Work in progress; not yet submitted",
+      "title": "A Shared Assisted-Muscle Objective for Human–Exosuit Co-Adaptation: Muscle-Level Sim-to-Real Evaluation",
+      "label": "S.1",
+      "status": "Submitted to IEEE Transactions on Neural Systems and Rehabilitation Engineering (TNSRE), 2026",
       "relation": "Journal extension of master's thesis [T.1].",
       "thesis_title": "Synergistic Myomimetic Control of Exosuit via Unified-Critic Reinforcement Learning",
       "authors": "Dongmin Go, Insu Choi, Kyeongmin Lim, Sejong Lee, and Giuk Lee",
-      "venue": "",
+      "venue": "IEEE Transactions on Neural Systems and Rehabilitation Engineering",
       "url": "research/myomimetic-exosuit/index.html",
       "thumbnail": "assets/myomimetic-poster.jpg",
-      "description": "Unified-critic multi-agent reinforcement learning for three walking environments, with sensor-history-based control and hardware validation.",
+      "description": "Human–exosuit co-adaptation with a shared assisted-muscle objective, evaluated through simulated muscle responses and surface EMG from seven participants across three walking environments.",
       "video_url": "files/myomimetic-exosuit-video.mp4"
     }
   ],
@@ -149,5 +149,5 @@
   ],
   "skills": [],
   "languages": [],
-  "updated": "October 2026"
+  "updated": "November 2026"
 }

@@ -35,7 +35,8 @@ def check(item):
         assert all(s in text for s in ['Dongmin Go','HUROTICS','4.37 / 4.50','3.82 / 4.50','Mar. 2026 - Present']), 'Deployed homepage content does not match'
         profile=json.loads((BASE/'source/profile.json').read_text(encoding='utf-8'))
         assert all(p['title'] in text for p in profile['publications']), 'Published works are missing'
-        assert 'Work in progress; not yet submitted' in text and 'Manuscripts in Preparation' not in text, 'Pending manuscript format does not match'
+        assert all(html.escape(m['status'],quote=True) in text and html.escape(m['title'],quote=True) in text for m in profile['manuscripts']), 'Submitted manuscript does not match'
+        assert 'not yet submitted' not in text, 'Stale submission status'
         assert all(html.escape(m.get('relation',''),quote=True) in text for m in profile['manuscripts']), 'Thesis-to-journal relationship is missing'
         report['latest_profile_verified']=True
         report['publications_verified']=True

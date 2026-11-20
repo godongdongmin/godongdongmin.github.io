@@ -84,7 +84,7 @@ native_name = f'<span class="native-name" lang="ko">{h(P["name_ko"])}</span>' if
 about_image = '<figure class="about-image"><img src="assets/real-steel-long.jpg" alt="A wide scene of a boy sitting beside the robot Atom in Real Steel" width="728" height="312"><figcaption>Real Steel (2011)</figcaption></figure>'
 about_vision = f'<div class="about-vision"><p class="about-goal">{h(P["homepage_goal_statement"])}</p>{about_image}</div>'
 intro = f'<section class="section intro" id="about"><h2>About Me</h2><div class="about-copy"><p>{about_text(P["summary"])}</p><p>{interest_html}</p><p>{about_text(P.get("background",""))}</p></div>{about_vision}<a class="cv-link" href="files/{cv_filename}">{icon("document")}Curriculum Vitae <span aria-hidden="true">↗</span></a></section>'
-publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · W = Work in progress</p>'
+publication_legend = '<p class="detail">J = Journal · C = Conference · T = Thesis · S = Submitted manuscript</p>'
 content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Selected Projects',projects,'projects') if projects else '') + background
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -168,7 +168,7 @@ for e in P['education']:
     chunks.append(r'\entry{'+tex(e['institution'])+'}{'+tex(e['dates'])+'}{'+tex(e['degree'])+'}\n'+tex_details(e['details'])+r'\vspace{4pt}'+'\n')
 if P['publications'] or P.get('manuscripts'):
     chunks.append(r'\section{Publications}'+'\n')
-    chunks.append(r'{\small\itshape J = Journal, C = Conference, T = Thesis, W = Work in progress}\par\vspace{6pt}'+'\n')
+    chunks.append(r'{\small\itshape J = Journal, C = Conference, T = Thesis, S = Submitted manuscript}\par\vspace{6pt}'+'\n')
     chunks.append(r'\begin{description}[leftmargin=32pt,labelwidth=28pt,labelsep=4pt,font=\normalfont,itemsep=7pt,parsep=0pt,topsep=0pt]'+'\n')
     for i,pub in enumerate(P['publications'],1):
         title = r'\textbf{'+tex(pub['title'])+'}'
