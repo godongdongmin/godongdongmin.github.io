@@ -73,7 +73,8 @@ for m in P.get('manuscripts',[]):
     authors = h(m.get('authors','')).replace(h(P['name']),'<strong>'+h(P['name'])+'</strong>')
     title = f'<a href="{h(m["url"])}">{h(m["title"])}</a>' if m.get('url') else h(m['title'])
     video = '<div class="publication-links"><a href="research/index.html#myomimetic-video">Video</a></div>' if m.get('video_url') else ''
-    manuscripts += f'<article class="entry" id="manuscripts"><h3 class="publication-title">[{h(m["label"])}] {title}</h3><p class="authors">{authors}</p><p class="detail">{h(m.get("relation",""))} <em>{h(m["status"])}</em></p>{video}</article>'
+    manuscript_id = 'manuscripts' if not manuscripts else 'manuscript-' + m['label'].lower().replace('.', '-')
+    manuscripts += f'<article class="entry" id="{h(manuscript_id)}"><h3 class="publication-title">[{h(m["label"])}] {title}</h3><p class="authors">{authors}</p><p class="detail">{h(m.get("relation",""))} <em>{h(m["status"])}</em></p>{video}</article>'
 cv_filename = 'Dongmin_Go_CV.pdf'
 email_link = f'<a href="mailto:{h(P["email"])}">{icon("email")}{h(P["email"])}</a>' if P['email'] else ''
 interest_sentence = P.get('homepage_interest_statement','')

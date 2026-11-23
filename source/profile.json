@@ -58,6 +58,15 @@
   ],
   "publications": [
     {
+      "label": "J.2",
+      "title": "Human-in-the-Loop Hip Exosuit Optimization for Uphill Walking: Stride Time and Mechanical Power from Onboard Sensors",
+      "authors": "Saikat Sahoo, Yoosun Kim, Dongmin Go, Sejun Park, Jeongho Choo, Gyeongmo Kim, Cheonkyu Park, and Giuk Lee",
+      "venue": "Biomimetics",
+      "citation_details": "vol. 11, no. 11, 782, 2026",
+      "year": "2026",
+      "url": "https://doi.org/10.3390/biomimetics11110782"
+    },
+    {
       "label": "J.1",
       "title": "Reducing Personalization Time and Energy Cost While Walking Outdoors with a Portable Exosuit",
       "authors": "Kimoon Nam, Saikat Sahoo, Yoosun Kim, Dongmin Go, Jeongho Choo, Cheonkyu Park, Seungtae Yang, and Giuk Lee",
@@ -97,6 +106,13 @@
       "thumbnail": "assets/myomimetic-poster.jpg",
       "description": "Human–exosuit co-adaptation with a shared assisted-muscle objective, evaluated through simulated muscle responses and surface EMG from seven participants across three walking environments.",
       "video_url": "files/myomimetic-exosuit-video.mp4"
+    },
+    {
+      "label": "S.2",
+      "title": "A contralateral reference and a stride-wise threshold for real-time detection of maximum hip flexion and extension in hip-assistive wearable robots during level walking",
+      "authors": "Sejun Park, Kiho Lee, Gyeongmo Kim, Dongmin Go, Kyeongmin Lim, Byeongjun Cho, Jinsoo Kim, and Giuk Lee",
+      "venue": "Frontiers in Bioengineering and Biotechnology",
+      "status": "Under review at Frontiers in Bioengineering and Biotechnology, 2026"
     }
   ],
   "projects": [

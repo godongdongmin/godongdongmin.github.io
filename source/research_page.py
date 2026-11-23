@@ -92,12 +92,18 @@ def build_research_index(site, profile):
     dest = site/'research'
     dest.mkdir(parents=True, exist_ok=True)
     studies = ''
+    listed_manuscripts = ''
     for m in profile.get('manuscripts', []):
         authors = h(m['authors']).replace(h(profile['name']),'<strong>'+h(profile['name'])+'</strong>')
+        if not m.get('url'):
+            listed_manuscripts += f'<article class="entry"><h3>{h(m["title"])}</h3><p>{authors}</p><p class="detail"><em>{h(m["status"])}</em></p></article>'
+            continue
         details = '../'+m['url']
         video = f'<video id="myomimetic-video" class="project-video" controls playsinline preload="metadata" poster="../{h(m["thumbnail"])}" aria-label="Research video: {h(m["title"])}"><source src="../{h(m["video_url"])}" type="video/mp4">Your browser does not support embedded video.</video>' if m.get('video_url') else ''
         studies += f'''<article class="research-study"><p class="eyebrow">SUBMITTED MANUSCRIPT</p><h2><a href="{h(details)}">{h(m['title'])}</a></h2><p class="authors">{authors}</p><p class="section-note">{h(m.get('relation',''))} {h(m['status'])}.</p><p class="study-summary">{h(m.get('description',''))}</p>{video}<p class="study-more"><a href="{h(details)}">Study details <span aria-hidden="true">→</span></a></p></article>'''
     published = ''
+    if listed_manuscripts:
+        studies += f'<section class="section"><h2>Submitted Work</h2>{listed_manuscripts}</section>'
     for p in profile['publications']:
         if not p['label'].startswith(('J.','C.')):
             continue
