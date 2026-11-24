@@ -33,7 +33,8 @@ def check(item):
         body=response.read() if method=='GET' else b''
     if path=='':
         text=body.decode('utf-8')
-        assert all(s in text for s in ['Dongmin Go','HUROTICS','4.37 / 4.50','3.82 / 4.50','Mar. 2026 - Present']), 'Deployed homepage content does not match'
+        assert all(s in text for s in ['Dongmin Go','HUROTICS','4.37 / 4.50','3.82 / 4.50']), 'Deployed homepage content does not match'
+        assert all(html.escape(e['dates'],quote=True) in text for e in PROFILE['experience']), 'Deployed employment dates do not match'
         profile=json.loads((BASE/'source/profile.json').read_text(encoding='utf-8'))
         assert all(p['title'] in text for p in profile['publications']), 'Published works are missing'
         assert all(html.escape(m['status'],quote=True) in text and html.escape(m['title'],quote=True) in text for m in profile['manuscripts']), 'Submitted manuscript does not match'

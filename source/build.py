@@ -89,7 +89,7 @@ publication_legend = '<p class="detail">J = Journal · C = Conference · T = The
 content = intro + (section('Publications',publication_legend+publications+manuscripts) if publications or manuscripts else '') + (section('Selected Projects',projects,'projects') if projects else '') + background
 page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])} at HUROTICS. M.S. in Mechanical Engineering, Chung-Ang University; former EUV Equipment Engineer at Samsung Electronics DS.">
+<title>{h(P['name'])} | Academic Homepage</title><meta name="description" content="{h(P['name'])}. {h(P['headline'])}. {h(P['homepage_interest_statement'])}">
 <meta name="theme-color" content="#ffffff"><link rel="canonical" href="{h(P['website'])}"><meta property="og:title" content="{h(P['name'])} | Academic Homepage"><meta property="og:description" content="{h(P['headline'])}. Education, experience, and research."><meta property="og:type" content="website"><meta property="og:url" content="{h(P['website'])}"><meta property="og:image" content="{h(P['website'])}assets/portrait.jpg"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="{stylesheet_href(SITE, '')}"></head>
 <body><a class="skip" href="#main">Skip to content</a>{site_navigation('home','index.html','research/index.html')}
 <div class="layout"><aside class="profile" aria-label="Profile"><img class="portrait" src="assets/portrait.jpg" alt="Portrait of {h(P['name'])}" width="218" height="262"><h1>{h(P['name'])}{native_name}</h1><p class="headline">{h(P['headline'])}</p><p class="affiliation">{h(P.get('profile_affiliation','Chung-Ang University'))}</p><div class="profile-links">{email_link}<a href="https://github.com/{h(P['github'])}">{icon('github')}GitHub</a><a href="files/{cv_filename}">{icon('document')}Curriculum Vitae</a></div></aside><main class="content" id="main">{content}</main></div>
@@ -135,7 +135,7 @@ if P['email']:
     contact.insert(0,r'\href{mailto:'+tex(P['email'])+'}{'+tex(P['email'])+'}')
 contact.append(r'\href{'+tex(P['website'])+'}{'+tex(P['website'].removeprefix('https://').rstrip('/'))+'}')
 chunks = [r'''\documentclass[10pt,a4paper]{article}
-\usepackage[top=14mm,bottom=14mm,left=16mm,right=16mm]{geometry}
+\usepackage[top=12mm,bottom=12mm,left=16mm,right=16mm]{geometry}
 \usepackage{fontspec}
 \IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
 \usepackage[dvipsnames]{xcolor}
@@ -150,9 +150,9 @@ chunks = [r'''\documentclass[10pt,a4paper]{article}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{0pt}
 \titleformat{\section}{\large\scshape\bfseries}{}{0pt}{}[\vspace{2pt}\titlerule]
-\titlespacing*{\section}{0pt}{8pt}{5pt}
-\setlist[itemize]{leftmargin=14pt,itemsep=1pt,topsep=2pt,parsep=0pt}
-\newcommand{\entry}[3]{\needspace{4\baselineskip}\begin{tabularx}{\linewidth}{@{}X r@{}}\textbf{#1}&\textit{#2}\\\end{tabularx}\if\relax\detokenize{#3}\relax\par\else\vspace{-2pt}\\\textit{#3}\par\fi}
+\titlespacing*{\section}{0pt}{4pt}{5pt}
+\setlist[itemize]{leftmargin=14pt,itemsep=0pt,topsep=1pt,parsep=0pt}
+\newcommand{\entry}[3]{\needspace{3\baselineskip}\begin{tabularx}{\linewidth}{@{}X r@{}}\textbf{#1}&\textit{#2}\\\end{tabularx}\if\relax\detokenize{#3}\relax\par\else\vspace{-2pt}\\\textit{#3}\par\fi}
 \begin{document}
 \begin{center}
 {\fontsize{27}{32}\selectfont\bfseries '''+tex(P['name'])+r'''}\\[7pt]
@@ -164,14 +164,14 @@ def tex_details(details):
     return '\\begin{itemize}\n'+''.join('\\item '+tex(d)+'\n' for d in details)+'\\end{itemize}\n' if details else ''
 chunks.append(r'\section{Experience}'+'\n')
 for e in P['experience']:
-    chunks.append(r'\entry{'+tex(e['institution'])+'}{'+tex(e['dates'])+'}{'+tex(e['role'])+'}\n'+tex_details(e['details'])+r'\vspace{4pt}'+'\n')
+    chunks.append(r'\entry{'+tex(e['institution'])+'}{'+tex(e['dates'])+'}{'+tex(e['role'])+'}\n'+tex_details(e['details'])+r'\vspace{1pt}'+'\n')
 chunks.append(r'\section{Education}'+'\n')
 for e in P['education']:
-    chunks.append(r'\entry{'+tex(e['institution'])+'}{'+tex(e['dates'])+'}{'+tex(e['degree'])+'}\n'+tex_details(e['details'])+r'\vspace{4pt}'+'\n')
+    chunks.append(r'\entry{'+tex(e['institution'])+'}{'+tex(e['dates'])+'}{'+tex(e['degree'])+'}\n'+tex_details(e['details'])+r'\vspace{1pt}'+'\n')
 if P['publications'] or P.get('manuscripts'):
     chunks.append(r'\section{Publications}'+'\n')
-    chunks.append(r'{\small\itshape J = Journal, C = Conference, T = Thesis, S = Submitted manuscript}\par\vspace{6pt}'+'\n')
-    chunks.append(r'\begin{description}[leftmargin=32pt,labelwidth=28pt,labelsep=4pt,font=\normalfont,itemsep=5pt,parsep=0pt,topsep=0pt]'+'\n')
+    chunks.append(r'{\small\itshape J = Journal, C = Conference, T = Thesis, S = Submitted manuscript}\par\vspace{3pt}'+'\n')
+    chunks.append(r'\begin{description}[leftmargin=32pt,labelwidth=28pt,labelsep=4pt,font=\normalfont,itemsep=3pt,parsep=0pt,topsep=0pt]'+'\n')
     for i,pub in enumerate(P['publications'],1):
         title = r'\textbf{'+tex(pub['title'])+'}'
         if pub.get('url'):
@@ -186,10 +186,10 @@ if P['projects']:
     chunks.append(r'\needspace{12\baselineskip}\section{Selected Projects}'+'\n')
     for project in P['projects']:
         title = r'\href{'+tex(P['website']+project['url'])+'}{'+tex(project['title'])+'}'
-        chunks.append(r'\entry{'+title+'}{'+tex(project['dates'])+'}{'+tex(project['role'])+'}\n'+tex_details(project.get('cv_details', project.get('details',[])))+r'\vspace{4pt}'+'\n')
+        chunks.append(r'\entry{'+title+'}{'+tex(project['dates'])+'}{'+tex(project['role'])+'}\n'+tex_details(project.get('cv_details', project.get('details',[])))+r'\vspace{1pt}'+'\n')
 chunks.append(r'\section{Honors and Awards}'+'\n')
 for a in P['awards']:
-    chunks.append(r'\entry{'+tex(a['title'])+'}{'+tex(a['date'])+'}{}\n'+tex(a['event'])+' · '+tex(a['organization'])+r'\par\vspace{4pt}'+'\n')
+    chunks.append(r'\entry{'+tex(a['title'])+'}{'+tex(a['date'])+'}{}\n'+tex(a['event'])+' · '+tex(a['organization'])+r'\par\vspace{1pt}'+'\n')
 if P['skills'] or P['research_interests'] or P['languages']:
     chunks.append(r'\section{Additional Information}'+'\n')
     for label,items in [('Research interests',P['research_interests']),('Technical skills',P['skills']),('Languages',P['languages'])]:
