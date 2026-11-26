@@ -1,5 +1,8 @@
 {
-  "selection": "Maximum mean evaluation episode return among the same six final-window candidates; exact ties select earlier checkpoint.",
+  "selection": "Highest mean evaluation episode score per training seed among checkpoints on the common 5-minute grid from 5 through 330 min; exact ties select earlier checkpoint.",
+  "budget_minutes": 330,
+  "evaluation_interval_minutes": 5,
+  "grid_points_per_run": 66,
   "evaluation_seeds": [
     101,
     202,
@@ -14,134 +17,134 @@
   "algorithms": {
     "PPO": {
       "survival_percent": {
-        "mean": 99.79166666666666,
-        "sd": 0.2178802152432477,
+        "mean": 99.6875,
+        "sd": 0.21788021524324602,
         "seed_values": [
           99.47916666666667,
           99.73958333333333,
+          100.0,
+          99.73958333333333,
+          99.47916666666667
+        ]
+      },
+      "mean_survival_seconds": {
+        "mean": 19.941802083333332,
+        "sd": 0.040029957043913295,
+        "seed_values": [
+          19.90427083333333,
+          19.9509375,
+          20.0,
+          19.950208333333332,
+          19.90359375
+        ]
+      },
+      "xy_rmse": {
+        "mean": 0.10127511580953799,
+        "sd": 0.009672061823604696,
+        "seed_values": [
+          0.08918649466756726,
+          0.09852413164516628,
+          0.11051322729524211,
+          0.11180442579322909,
+          0.09634729964648521
+        ]
+      },
+      "yaw_rmse": {
+        "mean": 0.09737816500190014,
+        "sd": 0.014378196007537501,
+        "seed_values": [
+          0.10516864712692563,
+          0.09008550316875716,
+          0.0945700523158524,
+          0.07979162862989445,
+          0.11727499376807105
+        ]
+      },
+      "mean_return": {
+        "mean": 49.722295467803875,
+        "sd": 0.4482098353083076,
+        "seed_values": [
+          50.086777145663895,
+          50.03193380932013,
+          49.73126489917437,
+          49.79394523675243,
+          48.967556248108544
+        ]
+      },
+      "total_failures": 6,
+      "rmse_missing_episodes": 5
+    },
+    "FastSAC": {
+      "survival_percent": {
+        "mean": 99.94791666666666,
+        "sd": 0.11646187382811617,
+        "seed_values": [
+          100.0,
+          100.0,
           100.0,
           100.0,
           99.73958333333333
         ]
       },
       "mean_survival_seconds": {
-        "mean": 19.961895833333337,
-        "sd": 0.04000850332793913,
+        "mean": 19.990281250000002,
+        "sd": 0.021731785656325383,
         "seed_values": [
-          19.90427083333333,
-          19.9509375,
           20.0,
           20.0,
-          19.954270833333336
+          20.0,
+          20.0,
+          19.95140625
         ]
       },
       "xy_rmse": {
-        "mean": 0.0942126503020542,
-        "sd": 0.01217193690944051,
+        "mean": 0.08053040563079766,
+        "sd": 0.004397262918412163,
         "seed_values": [
-          0.08918630159435563,
-          0.09852413164516628,
-          0.11051322729524211,
-          0.09540882094054393,
-          0.07743077003496308
-        ]
-      },
-      "yaw_rmse": {
-        "mean": 0.11043472807920332,
-        "sd": 0.03152641571170131,
-        "seed_values": [
-          0.10516776301866394,
-          0.09008550316875716,
-          0.0945700523158524,
-          0.09637711051971772,
-          0.16597321137302537
-        ]
-      },
-      "mean_return": {
-        "mean": 49.68809001247088,
-        "sd": 0.6213169330027812,
-        "seed_values": [
-          50.08677286406358,
-          50.03193380932013,
-          49.73126489917437,
-          49.98677190144857,
-          48.603706588347755
-        ]
-      },
-      "total_failures": 4,
-      "rmse_missing_episodes": 2
-    },
-    "FastSAC": {
-      "survival_percent": {
-        "mean": 100.0,
-        "sd": 0.0,
-        "seed_values": [
-          100.0,
-          100.0,
-          100.0,
-          100.0,
-          100.0
-        ]
-      },
-      "mean_survival_seconds": {
-        "mean": 20.0,
-        "sd": 0.0,
-        "seed_values": [
-          20.0,
-          20.0,
-          20.0,
-          20.0,
-          20.0
-        ]
-      },
-      "xy_rmse": {
-        "mean": 0.0777010094690462,
-        "sd": 0.0033995349737088666,
-        "seed_values": [
-          0.07535892083314581,
+          0.08396739293829979,
           0.07742177182429687,
-          0.08169868249499701,
-          0.08045779215599609,
-          0.07356788003679529
+          0.08634720739113788,
+          0.07871292749571002,
+          0.07620272850454372
         ]
       },
       "yaw_rmse": {
-        "mean": 0.10375616845458613,
-        "sd": 0.010088136303021307,
+        "mean": 0.09596164434179914,
+        "sd": 0.0067771941233497855,
         "seed_values": [
-          0.1197228556624978,
+          0.10192270603555885,
           0.09918289326546116,
-          0.10412113439456615,
-          0.09231060257120864,
-          0.10344335637919684
+          0.08556867778780193,
+          0.1003790676595225,
+          0.09275487696065131
         ]
       },
       "mean_return": {
-        "mean": 50.58961564898491,
-        "sd": 0.4112518215460566,
+        "mean": 50.9187337577343,
+        "sd": 0.1278099105337149,
         "seed_values": [
-          50.49552881717682,
+          50.9177685379982,
           51.01999989151955,
-          50.73209695021311,
-          49.933384676774345,
-          50.76706790924072
+          50.843761563301086,
+          51.06282418966293,
+          50.74931460618973
         ]
       },
-      "total_failures": 0,
-      "rmse_missing_episodes": 0
+      "total_failures": 1,
+      "rmse_missing_episodes": 1
     }
   },
-  "planar_rmse_reduction_percent": 17.525927548020558,
+  "planar_rmse_reduction_percent": 20.483521557016683,
   "models": [
     {
       "algorithm": "PPO",
       "training_seed": 42,
       "checkpoint": "model_9500.pt",
       "elapsed_minutes": 329.04253678719203,
-      "evaluation_mean_episode_score": 50.41422499219576,
-      "test_mean_episode_score": 50.08677286406358,
-      "xy_rmse": 0.08918630159435563,
-      "yaw_rmse": 0.10516776301866394,
+      "evaluation_mean_episode_score": 50.41655885179838,
+      "test_mean_episode_score": 50.086777145663895,
+      "xy_rmse": 0.08918649466756726,
+      "yaw_rmse": 0.10516864712692563,
       "sha256": "e5bf03dc4d5096c67f66e6b3c03e476db9c9b4776a564102be208915c3f72188"
     },
     {
@@ -149,7 +152,7 @@
       "training_seed": 43,
       "checkpoint": "model_8800.pt",
       "elapsed_minutes": 311.7822551369667,
-      "evaluation_mean_episode_score": 50.22338768839836,
+      "evaluation_mean_episode_score": 50.196759045124054,
       "test_mean_episode_score": 50.03193380932013,
       "xy_rmse": 0.09852413164516628,
       "yaw_rmse": 0.09008550316875716,
@@ -160,7 +163,7 @@
       "training_seed": 44,
       "checkpoint": "model_8800.pt",
       "elapsed_minutes": 312.7889455795288,
-      "evaluation_mean_episode_score": 49.92774320642153,
+      "evaluation_mean_episode_score": 49.92231040199598,
       "test_mean_episode_score": 49.73126489917437,
       "xy_rmse": 0.11051322729524211,
       "yaw_rmse": 0.0945700523158524,
@@ -169,42 +172,42 @@
     {
       "algorithm": "PPO",
       "training_seed": 45,
-      "checkpoint": "model_8600.pt",
-      "elapsed_minutes": 306.09761909246447,
-      "evaluation_mean_episode_score": 49.98684763908386,
-      "test_mean_episode_score": 49.98677190144857,
-      "xy_rmse": 0.09540882094054393,
-      "yaw_rmse": 0.09637711051971772,
-      "sha256": "0025172e4f2f2cfc21f2dd43d97a8cde0b1ce1ee10fb8d7c483930671d48fa72"
+      "checkpoint": "model_7000.pt",
+      "elapsed_minutes": 248.8065352241198,
+      "evaluation_mean_episode_score": 49.950313617785774,
+      "test_mean_episode_score": 49.79394523675243,
+      "xy_rmse": 0.11180442579322909,
+      "yaw_rmse": 0.07979162862989445,
+      "sha256": "86cb4fcaf6490a847f523b8816a494b5cd7df0ae5b345bfe26675955fa740d5f"
     },
     {
       "algorithm": "PPO",
       "training_seed": 46,
-      "checkpoint": "model_8800.pt",
-      "elapsed_minutes": 312.95783129533135,
-      "evaluation_mean_episode_score": 48.786069522301354,
-      "test_mean_episode_score": 48.603706588347755,
-      "xy_rmse": 0.07743077003496308,
-      "yaw_rmse": 0.16597321137302537,
-      "sha256": "e73894cc3e0e4d932020949188716cd60d1c8c3eca208883b6ac31bbeb31e58d"
+      "checkpoint": "model_7400.pt",
+      "elapsed_minutes": 263.4100416223208,
+      "evaluation_mean_episode_score": 49.33894137541453,
+      "test_mean_episode_score": 48.967556248108544,
+      "xy_rmse": 0.09634729964648521,
+      "yaw_rmse": 0.11727499376807105,
+      "sha256": "3b7a10e5ee71bce38318b15db9803195ab4dac976aa324ca84183f473153c78e"
     },
     {
       "algorithm": "FastSAC",
       "training_seed": 42,
-      "checkpoint": "model_0061000.pt",
-      "elapsed_minutes": 308.2671282450358,
-      "evaluation_mean_episode_score": 50.45355380574862,
-      "test_mean_episode_score": 50.49552881717682,
-      "xy_rmse": 0.07535892083314581,
-      "yaw_rmse": 0.1197228556624978,
-      "sha256": "ec7f7f4232e3d25525e93a6173bf6024f3cb6b63cec2ceb427e73e32bb050f37"
+      "checkpoint": "model_0050000.pt",
+      "elapsed_minutes": 253.57055327892303,
+      "evaluation_mean_episode_score": 50.94217737515768,
+      "test_mean_episode_score": 50.9177685379982,
+      "xy_rmse": 0.08396739293829979,
+      "yaw_rmse": 0.10192270603555885,
+      "sha256": "5f226933419fc3067d036f3db73d348a20e8e1c375f534b8f36e1f79f2eed6d1"
     },
     {
       "algorithm": "FastSAC",
       "training_seed": 43,
       "checkpoint": "model_0062000.pt",
       "elapsed_minutes": 317.1253642638524,
-      "evaluation_mean_episode_score": 51.03298532962799,
+      "evaluation_mean_episode_score": 51.03008708357811,
       "test_mean_episode_score": 51.01999989151955,
       "xy_rmse": 0.07742177182429687,
       "yaw_rmse": 0.09918289326546116,
@@ -213,35 +216,35 @@
     {
       "algorithm": "FastSAC",
       "training_seed": 44,
-      "checkpoint": "model_0064000.pt",
-      "elapsed_minutes": 321.53440179824827,
-      "evaluation_mean_episode_score": 50.76531772812208,
-      "test_mean_episode_score": 50.73209695021311,
-      "xy_rmse": 0.08169868249499701,
-      "yaw_rmse": 0.10412113439456615,
-      "sha256": "701177ef6ed0bc63b7ccbd25f2ab5ae567d26f154519791b644eeafc8b204142"
+      "checkpoint": "model_0059000.pt",
+      "elapsed_minutes": 296.57406454086305,
+      "evaluation_mean_episode_score": 50.91463705897331,
+      "test_mean_episode_score": 50.843761563301086,
+      "xy_rmse": 0.08634720739113788,
+      "yaw_rmse": 0.08556867778780193,
+      "sha256": "bb68748e2545846043f5b194fe127d6ce2aa88e4d8c989764c22cd1912508ca1"
     },
     {
       "algorithm": "FastSAC",
       "training_seed": 45,
-      "checkpoint": "model_0061000.pt",
-      "elapsed_minutes": 310.13543149630226,
-      "evaluation_mean_episode_score": 51.091197391351066,
-      "test_mean_episode_score": 49.933384676774345,
-      "xy_rmse": 0.08045779215599609,
-      "yaw_rmse": 0.09231060257120864,
-      "sha256": "b71602547eeb88d0546a5b7b09fa2137f03ff5d3ccf4ca76560082cf696f6de1"
+      "checkpoint": "model_0046000.pt",
+      "elapsed_minutes": 233.8341002901395,
+      "evaluation_mean_episode_score": 51.07961228489876,
+      "test_mean_episode_score": 51.06282418966293,
+      "xy_rmse": 0.07871292749571002,
+      "yaw_rmse": 0.1003790676595225,
+      "sha256": "4a6dd768873fa9d61740dd9665bdb862c91b296d2979648d880cf6d5c9e0e265"
     },
     {
       "algorithm": "FastSAC",
       "training_seed": 46,
-      "checkpoint": "model_0064000.pt",
-      "elapsed_minutes": 323.4769165992737,
-      "evaluation_mean_episode_score": 50.77012119690577,
-      "test_mean_episode_score": 50.76706790924072,
-      "xy_rmse": 0.07356788003679529,
-      "yaw_rmse": 0.10344335637919684,
-      "sha256": "be807432f4f237ba8a41fa5e9d536fb8652a414e2988b022af861329d8e8d45f"
+      "checkpoint": "model_0034000.pt",
+      "elapsed_minutes": 172.7133290966352,
+      "evaluation_mean_episode_score": 50.94403303662936,
+      "test_mean_episode_score": 50.74931460618973,
+      "xy_rmse": 0.07620272850454372,
+      "yaw_rmse": 0.09275487696065131,
+      "sha256": "0d3694af3efe5e882fb8c972121302c27c6b70527269996f01501fa37b9657e4"
     }
   ]
 }

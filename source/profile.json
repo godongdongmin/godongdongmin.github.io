@@ -126,12 +126,12 @@
         "Ran the Cyclo Lab PPO baseline and adapted FastSAC to the same K1 robot, observations, actions, rewards, and environment settings.",
         "Compared five training seeds per method under a shared 5.5-hour time budget, separating checkpoint selection from held-out testing.",
         "Reduced the time to reach the common evaluation target of 49.2007 by 72.8%: PPO 211.8 min versus FastSAC 57.5 min, averaged across five training seeds. The target is PPO's mean evaluation episode score at the 330-minute budget, averaged across its five seeds.",
-        "Reduced mean planar velocity tracking RMSE by 17.5% in held-out flat-ground simulation tests, selecting each final model by mean evaluation episode score."
+        "Reduced mean planar velocity tracking RMSE by 20.5% in held-out flat-ground simulation tests, selecting each model by the highest mean evaluation episode score across the full 330-minute budget at five-minute intervals."
       ],
       "cv_details": [
         "Adapted off-policy FastSAC to the Isaac Lab / Cyclo Lab K1 task; compared against PPO across five seeds per method.",
         "Cut time to reach PPO's 330-min evaluation score by 72.8%: PPO 211.8 min; FastSAC 57.5 min.",
-        "Reduced held-out planar velocity RMSE by 17.5% under a shared 5.5-hour training budget in simulation."
+        "Reduced held-out planar velocity RMSE by 20.5% under a shared 5.5-hour training budget in simulation."
       ],
       "url": "projects/ai-sapiens-k1/index.html",
       "thumbnail": "assets/ai-sapiens-k1/evaluation-progress-poster.png",
@@ -153,12 +153,12 @@
         {
           "url": "assets/ai-sapiens-k1/planar-velocity-tracking.png",
           "alt": "Held-out planar velocity tracking RMSE for PPO and FastSAC across five training seeds",
-          "caption": "Held-out planar velocity tracking. Mean RMSE decreased from 0.0942 to 0.0777 m/s (17.5%)."
+          "caption": "Held-out planar velocity tracking. Mean RMSE decreased from 0.1013 to 0.0805 m/s (20.5%)."
         },
         {
           "url": "assets/ai-sapiens-k1/yaw-rate-tracking.png",
           "alt": "Held-out yaw-rate tracking RMSE for PPO and FastSAC across five training seeds",
-          "caption": "Held-out yaw-rate tracking. Mean RMSE was 0.1104 rad/s for PPO and 0.1038 rad/s for FastSAC."
+          "caption": "Held-out yaw-rate tracking. Mean RMSE was 0.0974 rad/s for PPO and 0.0960 rad/s for FastSAC."
         }
       ],
       "videos": [
@@ -168,99 +168,99 @@
           "url": "files/k1-learning-progress-evaluation-15-70-120.mp4",
           "poster": "assets/ai-sapiens-k1/evaluation-progress-poster.png",
           "portrait": false,
-          "caption": "Training seed 42, a 0.5 m/s forward command, and matched initial poses. The shown policies were selected by mean evaluation episode score within ±3 min of each stage. The lower lines show five-seed mean evaluation scores, diamonds mark the shown policies, and the dashed line marks the common target. Curves end at the actual displayed checkpoint times. Each rollout lasts 13.32 s at 1× speed. The closing Test panel shows the final-budget test results."
+          "caption": "Training seed 42, a 0.5 m/s forward command, and matched initial poses. The shown policies were selected by mean evaluation episode score within ±3 min of each stage. The lower lines show five-seed mean evaluation scores, diamonds mark the shown policies, and the dashed line marks the common target. Curves end at the actual displayed checkpoint times. Each rollout lasts 13.32 s at 1× speed. The closing Test panel shows results for the highest evaluation-score models selected across the full 330-minute budget."
         }
       ],
       "results": {
         "PPO": {
           "xy_rmse": {
-            "mean": 0.0942126503020542,
-            "sd": 0.01217193690944051,
+            "mean": 0.10127511580953799,
+            "sd": 0.009672061823604696,
             "seed_values": [
-              0.08918630159435563,
+              0.08918649466756726,
               0.09852413164516628,
               0.11051322729524211,
-              0.09540882094054393,
-              0.07743077003496308
+              0.11180442579322909,
+              0.09634729964648521
             ]
           },
           "yaw_rmse": {
-            "mean": 0.11043472807920332,
-            "sd": 0.03152641571170131,
+            "mean": 0.09737816500190014,
+            "sd": 0.014378196007537501,
             "seed_values": [
-              0.10516776301866394,
+              0.10516864712692563,
               0.09008550316875716,
               0.0945700523158524,
-              0.09637711051971772,
-              0.16597321137302537
+              0.07979162862989445,
+              0.11727499376807105
             ]
           },
           "mean_return": {
-            "mean": 49.68809001247088,
-            "sd": 0.6213169330027812,
+            "mean": 49.722295467803875,
+            "sd": 0.4482098353083076,
             "seed_values": [
-              50.08677286406358,
+              50.086777145663895,
               50.03193380932013,
               49.73126489917437,
-              49.98677190144857,
-              48.603706588347755
+              49.79394523675243,
+              48.967556248108544
             ]
           },
           "mean_survival_seconds": {
-            "mean": 19.961895833333337,
-            "sd": 0.04000850332793913,
+            "mean": 19.941802083333332,
+            "sd": 0.040029957043913295,
             "seed_values": [
               19.90427083333333,
               19.9509375,
               20.0,
-              20.0,
-              19.954270833333336
+              19.950208333333332,
+              19.90359375
             ]
           }
         },
         "FastSAC": {
           "xy_rmse": {
-            "mean": 0.0777010094690462,
-            "sd": 0.0033995349737088666,
+            "mean": 0.08053040563079766,
+            "sd": 0.004397262918412163,
             "seed_values": [
-              0.07535892083314581,
+              0.08396739293829979,
               0.07742177182429687,
-              0.08169868249499701,
-              0.08045779215599609,
-              0.07356788003679529
+              0.08634720739113788,
+              0.07871292749571002,
+              0.07620272850454372
             ]
           },
           "yaw_rmse": {
-            "mean": 0.10375616845458613,
-            "sd": 0.010088136303021307,
+            "mean": 0.09596164434179914,
+            "sd": 0.0067771941233497855,
             "seed_values": [
-              0.1197228556624978,
+              0.10192270603555885,
               0.09918289326546116,
-              0.10412113439456615,
-              0.09231060257120864,
-              0.10344335637919684
+              0.08556867778780193,
+              0.1003790676595225,
+              0.09275487696065131
             ]
           },
           "mean_return": {
-            "mean": 50.58961564898491,
-            "sd": 0.4112518215460566,
+            "mean": 50.9187337577343,
+            "sd": 0.1278099105337149,
             "seed_values": [
-              50.49552881717682,
+              50.9177685379982,
               51.01999989151955,
-              50.73209695021311,
-              49.933384676774345,
-              50.76706790924072
+              50.843761563301086,
+              51.06282418966293,
+              50.74931460618973
             ]
           },
           "mean_survival_seconds": {
-            "mean": 20.0,
-            "sd": 0.0,
+            "mean": 19.990281250000002,
+            "sd": 0.021731785656325383,
             "seed_values": [
               20.0,
               20.0,
               20.0,
               20.0,
-              20.0
+              19.95140625
             ]
           }
         }
