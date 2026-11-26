@@ -1,6 +1,5 @@
 {
   "selection": "Highest mean evaluation episode score per training seed among checkpoints on the common 5-minute grid from 5 through 330 min; exact ties select earlier checkpoint.",
-  "budget_minutes": 330,
   "evaluation_interval_minutes": 5,
   "grid_points_per_run": 66,
   "evaluation_seeds": [
@@ -246,5 +245,7 @@
       "yaw_rmse": 0.09275487696065131,
       "sha256": "0d3694af3efe5e882fb8c972121302c27c6b70527269996f01501fa37b9657e4"
     }
-  ]
+  ],
+  "comparison_window_minutes": 330,
+  "ppo_training_iterations": 10000
 }

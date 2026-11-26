@@ -1,8 +1,7 @@
 {
-  "reference": "Mean of the five PPO evaluation scores at the 330-minute budget; latest saved checkpoint at or before that budget.",
+  "reference": "Mean of the five PPO evaluation scores at the end of the 330-minute comparison interval; latest saved checkpoint at or before that budget.",
   "threshold_score": 49.20072761774063,
   "threshold_fraction": 1.0,
-  "budget_minutes": 330,
   "evaluation_seeds": [
     101,
     202,
@@ -170,5 +169,6 @@
     }
   },
   "source_scores_sha256": "776fcf44321df37b455099a65b03eb2773508b2da58a73de655daf6f73664eb1",
-  "time_reduction_percent": 72.84407850422335
+  "time_reduction_percent": 72.84407850422335,
+  "comparison_window_minutes": 330
 }

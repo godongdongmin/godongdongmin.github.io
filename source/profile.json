@@ -121,17 +121,17 @@
       "title": "AI Sapiens K1: Humanoid Locomotion Learning",
       "dates": "2026",
       "role": "PPO Baseline & Off-Policy FastSAC Adaptation",
-      "description": "Extended my experience with human walking models to humanoid locomotion in Isaac Lab. Compared PPO with off-policy FastSAC across five training seeds per method. FastSAC reached PPO's final evaluation score in 72.8% less training time.",
+      "description": "Extended my experience with human walking models to humanoid locomotion in Isaac Lab. Compared PPO with off-policy FastSAC across five training seeds per method. FastSAC reached a common evaluation target in 72.8% less training time.",
       "details": [
         "Ran the Cyclo Lab PPO baseline and adapted FastSAC to the same K1 robot, observations, actions, rewards, and environment settings.",
-        "Compared five training seeds per method under a shared 5.5-hour time budget, separating checkpoint selection from held-out testing.",
-        "Reduced the time to reach the common evaluation target of 49.2007 by 72.8%: PPO 211.8 min versus FastSAC 57.5 min, averaged across five training seeds. The target is PPO's mean evaluation episode score at the 330-minute budget, averaged across its five seeds.",
-        "Reduced mean planar velocity tracking RMSE by 20.5% in held-out flat-ground simulation tests, selecting each model by the highest mean evaluation episode score across the full 330-minute budget at five-minute intervals."
+        "Trained PPO to the example configuration's 10,000 iterations. Compared five training seeds per method over a common 330-minute interval, separating checkpoint selection from held-out testing.",
+        "Reduced the time to reach the common evaluation target of 49.2007 by 72.8%: PPO 211.8 min versus FastSAC 57.5 min, averaged across five training seeds. The target is PPO's mean evaluation episode score at the end of the 330-minute comparison interval, averaged across its five seeds.",
+        "Reduced mean planar velocity tracking RMSE by 20.5% in held-out flat-ground simulation tests, selecting each model by the highest mean evaluation episode score across the full 330-minute comparison interval at five-minute intervals."
       ],
       "cv_details": [
-        "Adapted off-policy FastSAC to the Isaac Lab / Cyclo Lab K1 task; compared against PPO across five seeds per method.",
-        "Cut time to reach PPO's 330-min evaluation score by 72.8%: PPO 211.8 min; FastSAC 57.5 min.",
-        "Reduced held-out planar velocity RMSE by 20.5% under a shared 5.5-hour training budget in simulation."
+        "Adapted off-policy FastSAC to K1 in Isaac Lab; compared with Cyclo Lab's example PPO setup across five seeds per method.",
+        "Reached a common evaluation target 72.8% sooner: PPO 211.8 min; FastSAC 57.5 min.",
+        "Reduced held-out planar velocity RMSE by 20.5% over the same training-time comparison window in simulation."
       ],
       "url": "projects/ai-sapiens-k1/index.html",
       "thumbnail": "assets/ai-sapiens-k1/evaluation-progress-poster.png",
@@ -168,7 +168,7 @@
           "url": "files/k1-learning-progress-evaluation-15-70-120.mp4",
           "poster": "assets/ai-sapiens-k1/evaluation-progress-poster.png",
           "portrait": false,
-          "caption": "Training seed 42, a 0.5 m/s forward command, and matched initial poses. The shown policies were selected by mean evaluation episode score within ±3 min of each stage. The lower lines show five-seed mean evaluation scores, diamonds mark the shown policies, and the dashed line marks the common target. Curves end at the actual displayed checkpoint times. Each rollout lasts 13.32 s at 1× speed. The closing Test panel shows results for the highest evaluation-score models selected across the full 330-minute budget."
+          "caption": "Training seed 42, a 0.5 m/s forward command, and matched initial poses. The shown policies were selected by mean evaluation episode score within ±3 min of each stage. The lower lines show five-seed mean evaluation scores, diamonds mark the shown policies, and the dashed line marks the common target. Curves end at the actual displayed checkpoint times. Each rollout lasts 13.32 s at 1× speed. The closing Test panel shows results for the highest evaluation-score models selected across the full 330-minute comparison interval."
         }
       ],
       "results": {
@@ -266,10 +266,9 @@
         }
       },
       "evaluation_milestone": {
-        "reference": "Mean of the five PPO evaluation scores at the 330-minute budget; latest saved checkpoint at or before that budget.",
+        "reference": "Mean of the five PPO evaluation scores at the end of the 330-minute comparison interval; latest saved checkpoint at or before that budget.",
         "threshold_score": 49.20072761774063,
         "threshold_fraction": 1.0,
-        "budget_minutes": 330,
         "evaluation_seeds": [
           101,
           202,
@@ -437,7 +436,8 @@
           }
         },
         "source_scores_sha256": "776fcf44321df37b455099a65b03eb2773508b2da58a73de655daf6f73664eb1",
-        "time_reduction_percent": 72.84407850422335
+        "time_reduction_percent": 72.84407850422335,
+        "comparison_window_minutes": 330
       }
     },
     {
