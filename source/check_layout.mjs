@@ -76,11 +76,12 @@ try{
     audit.navigation=JSON.parse(navigation.result.value);
     const isHome=localPage==='index.html';
     const isSelected=name.startsWith('ces-')||name.startsWith('k1-');
-    if(audit.navigation.links.map(a=>a.text).join(',')!=='Home,Research'||audit.navigation.active!==((isHome||isSelected)?'Home':'Research')||audit.navigation.videos!==(isHome?0:isSelected?2:1))throw new Error('Unexpected navigation/video structure: '+name);
+    const expectedVideos=isHome?0:name.startsWith('k1-')?1:isSelected?2:1;
+    if(audit.navigation.links.map(a=>a.text).join(',')!=='Home,Research'||audit.navigation.active!==((isHome||isSelected)?'Home':'Research')||audit.navigation.videos!==expectedVideos)throw new Error('Unexpected navigation/video structure: '+name);
     if(isSelected){
       const playback=await call('Runtime.evaluate',{expression:`(async()=>{const results=[];for(const v of document.querySelectorAll('video')){v.muted=true;await v.play();await new Promise(r=>setTimeout(r,500));results.push({duration:v.duration,width:v.videoWidth,height:v.videoHeight,playing:!v.paused,currentTime:v.currentTime,error:v.error?.message??null});v.pause();v.currentTime=0;}return results;})()`,awaitPromise:true,returnByValue:true});
       audit.projectVideos=playback.result.value;
-      if(!audit.projectVideos||audit.projectVideos.length!==2||audit.projectVideos.some(v=>!v.playing||v.error||v.currentTime<=0))throw new Error('Selected project video playback failed: '+name);
+      if(!audit.projectVideos||audit.projectVideos.length!==expectedVideos||audit.projectVideos.some(v=>!v.playing||v.error||v.currentTime<=0))throw new Error('Selected project video playback failed: '+name);
     }
     if(name==='research-desktop'||name==='research-mobile'||name==='project-desktop'){
       const playback=await call('Runtime.evaluate',{expression:`(async()=>{const v=document.querySelector('video'); if(!v)return {error:'Video element missing'}; if(v.readyState<1)await Promise.race([new Promise((r,j)=>{v.addEventListener('loadedmetadata',r,{once:true});v.addEventListener('error',()=>j(new Error('Video load failed')),{once:true});}),new Promise((_,j)=>setTimeout(()=>j(new Error('Video metadata timeout')),7000))]); v.muted=true; await v.play(); await new Promise(r=>setTimeout(r,500)); const result={duration:v.duration,width:v.videoWidth,height:v.videoHeight,playing:!v.paused,currentTime:v.currentTime,error:v.error?.message??null};v.pause();v.currentTime=0;return result;})()`,awaitPromise:true,returnByValue:true});

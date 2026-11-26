@@ -121,34 +121,34 @@
       "title": "AI Sapiens K1: Humanoid Locomotion Learning",
       "dates": "2026",
       "role": "PPO Baseline & Off-Policy FastSAC Adaptation",
-      "description": "Extended my experience with human walking models to humanoid locomotion in Isaac Lab. Compared PPO with off-policy FastSAC across five training seeds per method; FastSAC sustained 95% of the maximum episode duration for 5 min in 69% less training time.",
+      "description": "Extended my experience with human walking models to humanoid locomotion in Isaac Lab. Compared PPO with off-policy FastSAC across five training seeds per method; FastSAC reached 95% of each run's peak mean episode score in 66% less training time.",
       "details": [
         "Ran the Cyclo Lab PPO baseline and adapted FastSAC to the same K1 robot, observations, actions, rewards, and environment settings.",
         "Compared five training seeds per method under a shared 5.5-hour time budget, separating checkpoint selection from held-out testing.",
-        "Reduced the time to reach 95% of the maximum episode duration and sustain it for 5 min by 68.8%: PPO 44.1 min versus FastSAC 13.8 min, averaged across five training seeds.",
+        "Reduced the time to first reach 95% of each run's peak mean episode score by 65.6%: PPO 203.3 min versus FastSAC 70.0 min, averaged across five training seeds.",
         "Reduced mean planar velocity tracking RMSE by 22.8% in held-out flat-ground simulation tests under the shared training-time budget."
       ],
       "cv_details": [
         "Adapted off-policy FastSAC to the Isaac Lab / Cyclo Lab K1 task; compared against PPO across five seeds per method.",
-        "Cut time to sustain 95% of the maximum episode duration for 5 min by 69%: PPO 44.1 min; FastSAC 13.8 min.",
+        "Cut time to first reach 95% of each run's peak mean episode score by 66%: PPO 203.3 min; FastSAC 70.0 min.",
         "Reduced held-out planar velocity RMSE by 23% under a shared 5.5-hour training budget in simulation."
       ],
       "url": "projects/ai-sapiens-k1/index.html",
-      "thumbnail": "assets/ai-sapiens-k1/fastsac-poster.png",
-      "thumbnail_width": 1280,
-      "thumbnail_height": 720,
-      "photo_alt": "AI Sapiens K1 humanoid walking in the Isaac Lab simulation",
+      "thumbnail": "assets/ai-sapiens-k1/learning-progress-poster.png",
+      "thumbnail_width": 1920,
+      "thumbnail_height": 1080,
+      "photo_alt": "PPO and off-policy FastSAC training progress for the AI Sapiens K1 humanoid, with synchronized reward curves",
       "link_label": "Project details, results & videos",
       "figures": [
         {
-          "url": "assets/ai-sapiens-k1/survival-learning.png",
-          "alt": "PPO and FastSAC mean training episode duration versus elapsed training time",
-          "caption": "Training episode duration (mean ± SD across five training seeds). Time to reach 95% of the maximum episode duration and sustain it for 5 min: PPO 44.1 ± 6.9 min; FastSAC 13.8 ± 0.4 min. Times are calculated per seed and then averaged, not read from the mean curve."
-        },
-        {
           "url": "assets/ai-sapiens-k1/reward-learning.png",
           "alt": "PPO and FastSAC mean training episode return versus elapsed training time",
-          "caption": "Training episode return. FastSAC improved earlier, but some runs fluctuated later. Training curves are distinct from held-out test performance."
+          "caption": "Mean training episode score (mean ± SD). First reach of 95% of each run's own peak: PPO 203.3 ± 16.2 min; FastSAC 70.0 ± 10.0 min. Times are computed per seed and then averaged, not read from this mean curve."
+        },
+        {
+          "url": "assets/ai-sapiens-k1/survival-learning.png",
+          "alt": "PPO and FastSAC mean training episode duration versus elapsed training time",
+          "caption": "Training episode duration (mean ± SD across five training seeds). This measures duration during training, not held-out success probability."
         },
         {
           "url": "assets/ai-sapiens-k1/planar-velocity-tracking.png",
@@ -163,20 +163,12 @@
       ],
       "videos": [
         {
-          "id": "ppo",
-          "title": "PPO",
-          "url": "files/k1-ppo-1mps.mp4",
-          "poster": "assets/ai-sapiens-k1/ppo-poster.png",
+          "id": "learning-progress",
+          "title": "PPO vs. off-policy FastSAC at 15, 70 and 120 min",
+          "url": "files/k1-learning-progress-15-70-120.mp4",
+          "poster": "assets/ai-sapiens-k1/learning-progress-poster.png",
           "portrait": false,
-          "caption": "Simulation rollout with a 1 m/s forward velocity command. Illustrative footage, separate from the aggregate test results."
-        },
-        {
-          "id": "fastsac",
-          "title": "FastSAC (off-policy)",
-          "url": "files/k1-fastsac-1mps.mp4",
-          "poster": "assets/ai-sapiens-k1/fastsac-poster.png",
-          "portrait": false,
-          "caption": "Simulation rollout with the same 1 m/s forward velocity command."
+          "caption": "Side-by-side playback from training seed 42 with a 0.5 m/s forward command and matched initial poses. Checkpoints within ±3 min of each stage were selected by validation mean episode score. Exact checkpoint times and training samples are shown; the five-seed reward curves end at those times. Each stage plays for 13.32 s at 1× speed. The closing Test panel reports the separate final-budget evaluation, not these early checkpoints."
         }
       ],
       "results": {
@@ -229,23 +221,107 @@
           }
         }
       },
-      "survival_milestone": {
-        "episode_limit_seconds": 20,
-        "threshold_seconds": 19,
-        "hold_minutes": 5,
+      "reward_milestone": {
+        "budget_minutes": 330,
         "smoothing_seconds": 60,
-        "training_seeds": 5,
-        "description": "First confirmation time including the five-minute hold; computed per seed, then averaged. Later regressions remain possible.",
+        "hold_seconds": 0,
+        "threshold_fraction": 0.95,
         "algorithms": {
           "PPO": {
-            "mean_minutes": 44.14333333333333,
-            "sd_minutes": 6.855924040160046
+            "mean_minutes": 203.29,
+            "sd_minutes": 16.18016876027908,
+            "seeds": [
+              {
+                "training_seed": 42,
+                "max_smoothed_mean_episode_score": 28.763340994514444,
+                "threshold_score": 27.32517394478872,
+                "first_reach_seconds": 12442.0,
+                "first_reach_minutes": 207.36666666666667,
+                "score_at_first_reach": 27.336658660233766
+              },
+              {
+                "training_seed": 43,
+                "max_smoothed_mean_episode_score": 28.67573895964164,
+                "threshold_score": 27.24195201165956,
+                "first_reach_seconds": 13085.0,
+                "first_reach_minutes": 218.08333333333334,
+                "score_at_first_reach": 27.24518423028924
+              },
+              {
+                "training_seed": 44,
+                "max_smoothed_mean_episode_score": 29.005112783442673,
+                "threshold_score": 27.55485714427054,
+                "first_reach_seconds": 13073.0,
+                "first_reach_minutes": 217.88333333333333,
+                "score_at_first_reach": 27.555430409992276
+              },
+              {
+                "training_seed": 45,
+                "max_smoothed_mean_episode_score": 28.939930994229208,
+                "threshold_score": 27.492934444517747,
+                "first_reach_seconds": 11458.0,
+                "first_reach_minutes": 190.96666666666667,
+                "score_at_first_reach": 27.511368431349243
+              },
+              {
+                "training_seed": 46,
+                "max_smoothed_mean_episode_score": 28.61547521644595,
+                "threshold_score": 27.184701455623653,
+                "first_reach_seconds": 10929.0,
+                "first_reach_minutes": 182.15,
+                "score_at_first_reach": 27.185452039023875
+              }
+            ]
           },
           "FastSAC": {
-            "mean_minutes": 13.793333333333333,
-            "sd_minutes": 0.391684396761815
+            "mean_minutes": 69.95,
+            "sd_minutes": 9.985294743326868,
+            "seeds": [
+              {
+                "training_seed": 42,
+                "max_smoothed_mean_episode_score": 34.7591070180407,
+                "threshold_score": 33.02115166713867,
+                "first_reach_seconds": 4329.0,
+                "first_reach_minutes": 72.15,
+                "score_at_first_reach": 33.022148963102104
+              },
+              {
+                "training_seed": 43,
+                "max_smoothed_mean_episode_score": 34.48814608849477,
+                "threshold_score": 32.763738784070036,
+                "first_reach_seconds": 3991.0,
+                "first_reach_minutes": 66.51666666666667,
+                "score_at_first_reach": 32.77778761965854
+              },
+              {
+                "training_seed": 44,
+                "max_smoothed_mean_episode_score": 34.574291584975384,
+                "threshold_score": 32.84557700572661,
+                "first_reach_seconds": 3271.0,
+                "first_reach_minutes": 54.516666666666666,
+                "score_at_first_reach": 32.86132974827746
+              },
+              {
+                "training_seed": 45,
+                "max_smoothed_mean_episode_score": 34.71622166974758,
+                "threshold_score": 32.9804105862602,
+                "first_reach_seconds": 4601.0,
+                "first_reach_minutes": 76.68333333333334,
+                "score_at_first_reach": 33.000258456791535
+              },
+              {
+                "training_seed": 46,
+                "max_smoothed_mean_episode_score": 34.5046227893991,
+                "threshold_score": 32.779391649929146,
+                "first_reach_seconds": 4793.0,
+                "first_reach_minutes": 79.88333333333334,
+                "score_at_first_reach": 32.78046735777619
+              }
+            ]
           }
-        }
+        },
+        "training_seeds": 5,
+        "description": "First reach of 95% of each seed own maximum smoothed mean episode score within 330 minutes. Compute per seed, then average. No hold requirement; not proof of sustained convergence."
       }
     },
     {
