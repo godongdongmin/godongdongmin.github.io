@@ -1,0 +1,174 @@
+{
+  "reference": "Mean of the five PPO evaluation scores at the 330-minute budget; latest saved checkpoint at or before that budget.",
+  "threshold_score": 49.20072761774063,
+  "threshold_fraction": 1.0,
+  "budget_minutes": 330,
+  "evaluation_seeds": [
+    101,
+    202,
+    303
+  ],
+  "episodes_per_checkpoint": 384,
+  "ppo_reference_checkpoints": [
+    {
+      "training_seed": 42,
+      "label": "PPO_seed42_model_9500",
+      "elapsed_minutes": 329.04253678719203,
+      "mean_episode_score": 50.41655885179838,
+      "checkpoint": "model_9500.pt",
+      "sha256": "e5bf03dc4d5096c67f66e6b3c03e476db9c9b4776a564102be208915c3f72188"
+    },
+    {
+      "training_seed": 43,
+      "label": "PPO_seed43_model_9300",
+      "elapsed_minutes": 329.42865332365034,
+      "mean_episode_score": 49.556589821974434,
+      "checkpoint": "model_9300.pt",
+      "sha256": "3774d453c6effe6ea0b865b6ebf30613ebe968179ec46a72a348fd8f3d5856ca"
+    },
+    {
+      "training_seed": 44,
+      "label": "PPO_seed44_model_9200",
+      "elapsed_minutes": 326.94057579835254,
+      "mean_episode_score": 48.31357594331106,
+      "checkpoint": "model_9200.pt",
+      "sha256": "ec9f78e0fe012e4d409703dfa0a381ab69d54d90d18b49302219e7ba24422530"
+    },
+    {
+      "training_seed": 45,
+      "label": "PPO_seed45_model_9200",
+      "elapsed_minutes": 327.8365890343984,
+      "mean_episode_score": 49.40330825249354,
+      "checkpoint": "model_9200.pt",
+      "sha256": "b028c7b272ab318e8559b1067002956353916eccd1cee4840c17a5a6240985e6"
+    },
+    {
+      "training_seed": 46,
+      "label": "PPO_seed46_model_9200",
+      "elapsed_minutes": 327.12082075277965,
+      "mean_episode_score": 48.31360521912575,
+      "checkpoint": "model_9200.pt",
+      "sha256": "a1230b92f99a37816ec2cb4622d97e7bc96f715dbcddfb0702ca4f6e7a885af1"
+    }
+  ],
+  "algorithms": {
+    "PPO": {
+      "seeds": [
+        {
+          "training_seed": 42,
+          "reached": true,
+          "first_reach_minutes": 184.0635222752889,
+          "score_at_first_reach": 49.356433580319084,
+          "checkpoint": "model_5300.pt",
+          "sha256": "52f2a0f9fbc60e32fe4193a49db797a055fc6d8aa521960c1c5f37cc7d86e796",
+          "previous_minutes": 177.1439250389735,
+          "previous_score": 47.864492197831474
+        },
+        {
+          "training_seed": 43,
+          "reached": true,
+          "first_reach_minutes": 209.2550324479739,
+          "score_at_first_reach": 49.27923717101415,
+          "checkpoint": "model_5900.pt",
+          "sha256": "fc406b220ce2fe6d96dde1d431595f96ebaf5c0d71e0e32481358244889acd0d",
+          "previous_minutes": 202.1788888335228,
+          "previous_score": 48.703304459651314
+        },
+        {
+          "training_seed": 44,
+          "reached": true,
+          "first_reach_minutes": 238.4427390297254,
+          "score_at_first_reach": 49.66762186090151,
+          "checkpoint": "model_6700.pt",
+          "sha256": "7775151a94bf0904c27cf18128db409f839b3cf36eb438a76c2575b1988ef861",
+          "previous_minutes": 234.89931215445202,
+          "previous_score": 49.085370033979416
+        },
+        {
+          "training_seed": 45,
+          "reached": true,
+          "first_reach_minutes": 163.929379594326,
+          "score_at_first_reach": 49.36384548743566,
+          "checkpoint": "model_4600.pt",
+          "sha256": "a6ff5e204438f0652ad7e1f2cbe63fcf8cf22049b42fac25621e32672ce6d2b8",
+          "previous_minutes": 156.8459631840388,
+          "previous_score": 47.738457918167114
+        },
+        {
+          "training_seed": 46,
+          "reached": true,
+          "first_reach_minutes": 263.4100416223208,
+          "score_at_first_reach": 49.33894137541453,
+          "checkpoint": "model_7400.pt",
+          "sha256": "3b7a10e5ee71bce38318b15db9803195ab4dac976aa324ca84183f473153c78e",
+          "previous_minutes": 259.86245246330895,
+          "previous_score": 48.16977693637212
+        }
+      ],
+      "reached_seeds": 5,
+      "total_seeds": 5,
+      "mean_minutes": 211.820142993927,
+      "sd_minutes": 40.12734499378544
+    },
+    "FastSAC": {
+      "seeds": [
+        {
+          "training_seed": 42,
+          "reached": true,
+          "first_reach_minutes": 52.75179731448491,
+          "score_at_first_reach": 49.739003171523414,
+          "checkpoint": "model_0010000.pt",
+          "sha256": "e8cdeb21d8981dcebf96efd0076ed0666f67d4b81f9f35302fb73e5aec6cc4eb",
+          "previous_minutes": 47.68719435532888,
+          "previous_score": 49.02956974506378
+        },
+        {
+          "training_seed": 43,
+          "reached": true,
+          "first_reach_minutes": 51.74801015853882,
+          "score_at_first_reach": 49.20517155031363,
+          "checkpoint": "model_0010000.pt",
+          "sha256": "9ac4d96d39ed08fc1d45d73e3a6972b705547cd2e1723862db892b2c4ae770ac",
+          "previous_minutes": 46.55839969714483,
+          "previous_score": 47.83242783943812
+        },
+        {
+          "training_seed": 44,
+          "reached": true,
+          "first_reach_minutes": 70.64972342650096,
+          "score_at_first_reach": 49.45024644955993,
+          "checkpoint": "model_0014000.pt",
+          "sha256": "1c6c8c2750d24fd526f00ae0ce8ec831f1f72e83611f77b11726a58eb96648b0",
+          "previous_minutes": 65.64025402466456,
+          "previous_score": 48.62754518042008
+        },
+        {
+          "training_seed": 45,
+          "reached": true,
+          "first_reach_minutes": 51.079533930619554,
+          "score_at_first_reach": 49.38834592203299,
+          "checkpoint": "model_0010000.pt",
+          "sha256": "4a610c2eda43fd87e6136568c7d66a1ed15f4d25a835d758bbdd72bcc99a54c9",
+          "previous_minutes": 46.018748883406325,
+          "previous_score": 48.58589703217149
+        },
+        {
+          "training_seed": 46,
+          "reached": true,
+          "first_reach_minutes": 61.379493888219194,
+          "score_at_first_reach": 49.24804433186849,
+          "checkpoint": "model_0012000.pt",
+          "sha256": "b3dc492881de51544b19f9cfbb82ccb83c5079dc90d8bdabc35f1446d58d5a84",
+          "previous_minutes": 56.297059098879494,
+          "previous_score": 48.39989811182022
+        }
+      ],
+      "reached_seeds": 5,
+      "total_seeds": 5,
+      "mean_minutes": 57.52171174367269,
+      "sd_minutes": 8.438254298879041
+    }
+  },
+  "source_scores_sha256": "776fcf44321df37b455099a65b03eb2773508b2da58a73de655daf6f73664eb1",
+  "time_reduction_percent": 72.84407850422335
+}

@@ -121,34 +121,34 @@
       "title": "AI Sapiens K1: Humanoid Locomotion Learning",
       "dates": "2026",
       "role": "PPO Baseline & Off-Policy FastSAC Adaptation",
-      "description": "Extended my experience with human walking models to humanoid locomotion in Isaac Lab. Compared PPO with off-policy FastSAC across five training seeds per method; FastSAC first reached 95% of each run's peak mean validation episode score in 70% less training time.",
+      "description": "Extended my experience with human walking models to humanoid locomotion in Isaac Lab. Compared PPO with off-policy FastSAC across five training seeds per method. FastSAC reached PPO's final evaluation score in 72.8% less training time.",
       "details": [
         "Ran the Cyclo Lab PPO baseline and adapted FastSAC to the same K1 robot, observations, actions, rewards, and environment settings.",
         "Compared five training seeds per method under a shared 5.5-hour time budget, separating checkpoint selection from held-out testing.",
-        "Reduced the time to first observe 95% of each run's peak mean validation episode score by 70.1%: PPO 117.7 min versus FastSAC 35.2 min, averaged across five training seeds. Checkpoints were sampled on a five-minute time grid.",
+        "Reduced the time to reach the common evaluation target of 49.2007 by 72.8%: PPO 211.8 min versus FastSAC 57.5 min, averaged across five training seeds. The target is PPO's mean evaluation episode score at the 330-minute budget, averaged across its five seeds.",
         "Reduced mean planar velocity tracking RMSE by 22.8% in held-out flat-ground simulation tests under the shared training-time budget."
       ],
       "cv_details": [
         "Adapted off-policy FastSAC to the Isaac Lab / Cyclo Lab K1 task; compared against PPO across five seeds per method.",
-        "Cut time to first reach 95% of each run's peak mean validation score by 70%: PPO 117.7 min; FastSAC 35.2 min.",
+        "Cut time to reach PPO's 330-min evaluation score by 72.8%: PPO 211.8 min; FastSAC 57.5 min.",
         "Reduced held-out planar velocity RMSE by 23% under a shared 5.5-hour training budget in simulation."
       ],
       "url": "projects/ai-sapiens-k1/index.html",
-      "thumbnail": "assets/ai-sapiens-k1/validation-progress-poster.png",
+      "thumbnail": "assets/ai-sapiens-k1/evaluation-progress-poster.png",
       "thumbnail_width": 1920,
       "thumbnail_height": 1080,
-      "photo_alt": "PPO and off-policy FastSAC K1 rollouts at 15, 70 and 120 min, with validation score curves",
+      "photo_alt": "PPO and off-policy FastSAC K1 rollouts at 15, 70 and 120 min, with evaluation score curves",
       "link_label": "Project details, results & videos",
       "figures": [
         {
-          "url": "assets/ai-sapiens-k1/validation-reward.png",
-          "alt": "Mean validation episode score of time-selected PPO and FastSAC checkpoints",
-          "caption": "Validation episode score (mean ± SD across five training seeds). First observed reach of 95% of each run's own peak: PPO 117.7 ± 13.6 min; FastSAC 35.2 ± 8.3 min. Times are computed per seed, then averaged."
+          "url": "assets/ai-sapiens-k1/evaluation-reward.png",
+          "alt": "Mean evaluation episode score of PPO and FastSAC checkpoints with the common target",
+          "caption": "Evaluation episode score (mean ± SD across five training seeds). Dashed line: common target 49.2007, PPO's five-seed mean at 330 min. First-reach time: PPO 211.8 ± 40.1 min; FastSAC 57.5 ± 8.4 min."
         },
         {
-          "url": "assets/ai-sapiens-k1/validation-survival.png",
-          "alt": "Mean validation episode duration of PPO and FastSAC checkpoints",
-          "caption": "Validation episode duration (mean ± SD across five training seeds). Every checkpoint uses the same 384 first episodes, including failures. Step curves carry forward each seed’s latest evaluated checkpoint; no smoothing or future interpolation."
+          "url": "assets/ai-sapiens-k1/evaluation-survival.png",
+          "alt": "Mean evaluation episode duration of PPO and FastSAC checkpoints",
+          "caption": "Evaluation episode duration (mean ± SD across five training seeds). Each checkpoint uses the same 384 evaluation episodes."
         },
         {
           "url": "assets/ai-sapiens-k1/planar-velocity-tracking.png",
@@ -165,10 +165,10 @@
         {
           "id": "learning-progress",
           "title": "PPO vs. off-policy FastSAC at 15, 70 and 120 min",
-          "url": "files/k1-learning-progress-validation-15-70-120.mp4",
-          "poster": "assets/ai-sapiens-k1/validation-progress-poster.png",
+          "url": "files/k1-learning-progress-evaluation-15-70-120.mp4",
+          "poster": "assets/ai-sapiens-k1/evaluation-progress-poster.png",
           "portrait": false,
-          "caption": "Training seed 42, a 0.5 m/s forward command, and matched initial poses. The shown policies were selected by validation mean episode score within ±3 min of each stage. The lower lines show five-seed mean validation scores; diamonds mark the shown policies. Curves stop at the actual displayed checkpoint times. Each rollout lasts 13.32 s at 1× speed. The closing Test panel is the separate final-budget evaluation."
+          "caption": "Training seed 42, a 0.5 m/s forward command, and matched initial poses. The shown policies were selected by mean evaluation episode score within ±3 min of each stage. The lower lines show five-seed mean evaluation scores, diamonds mark the shown policies, and the dashed line marks the common target. Curves end at the actual displayed checkpoint times. Each rollout lasts 13.32 s at 1× speed. The closing Test panel shows the final-budget test results."
         }
       ],
       "results": {
@@ -221,239 +221,179 @@
           }
         }
       },
-      "validation_milestone": {
-        "definition": "For each training seed: first evaluated grid-selected checkpoint reaching 95% of that run own maximum validation mean episode return among grid-selected checkpoints within 330 min. Use actual checkpoint time; average the five first-reach times. No hold and no interpolated crossing. Video-only extra checkpoints excluded from milestone.",
+      "evaluation_milestone": {
+        "reference": "Mean of the five PPO evaluation scores at the 330-minute budget; latest saved checkpoint at or before that budget.",
+        "threshold_score": 49.20072761774063,
+        "threshold_fraction": 1.0,
         "budget_minutes": 330,
-        "grid_minutes": [
-          5,
-          10,
-          15,
-          20,
-          25,
-          30,
-          35,
-          40,
-          45,
-          50,
-          55,
-          60,
-          65,
-          70,
-          75,
-          80,
-          85,
-          90,
-          95,
-          100,
-          105,
-          110,
-          115,
-          120,
-          125,
-          130,
-          135,
-          140,
-          145,
-          150,
-          155,
-          160,
-          165,
-          170,
-          175,
-          180,
-          185,
-          190,
-          195,
-          200,
-          205,
-          210,
-          215,
-          220,
-          225,
-          230,
-          235,
-          240,
-          245,
-          250,
-          255,
-          260,
-          265,
-          270,
-          275,
-          280,
-          285,
-          290,
-          295,
-          300,
-          305,
-          310,
-          315,
-          320,
-          325,
-          330
-        ],
-        "threshold_fraction": 0.95,
-        "training_seeds": [
-          42,
-          43,
-          44,
-          45,
-          46
-        ],
-        "validation_seeds": [
+        "evaluation_seeds": [
           101,
           202,
           303
         ],
         "episodes_per_checkpoint": 384,
-        "smoothing_seconds": 0,
-        "hold_seconds": 0,
+        "ppo_reference_checkpoints": [
+          {
+            "training_seed": 42,
+            "label": "PPO_seed42_model_9500",
+            "elapsed_minutes": 329.04253678719203,
+            "mean_episode_score": 50.41655885179838,
+            "checkpoint": "model_9500.pt",
+            "sha256": "e5bf03dc4d5096c67f66e6b3c03e476db9c9b4776a564102be208915c3f72188"
+          },
+          {
+            "training_seed": 43,
+            "label": "PPO_seed43_model_9300",
+            "elapsed_minutes": 329.42865332365034,
+            "mean_episode_score": 49.556589821974434,
+            "checkpoint": "model_9300.pt",
+            "sha256": "3774d453c6effe6ea0b865b6ebf30613ebe968179ec46a72a348fd8f3d5856ca"
+          },
+          {
+            "training_seed": 44,
+            "label": "PPO_seed44_model_9200",
+            "elapsed_minutes": 326.94057579835254,
+            "mean_episode_score": 48.31357594331106,
+            "checkpoint": "model_9200.pt",
+            "sha256": "ec9f78e0fe012e4d409703dfa0a381ab69d54d90d18b49302219e7ba24422530"
+          },
+          {
+            "training_seed": 45,
+            "label": "PPO_seed45_model_9200",
+            "elapsed_minutes": 327.8365890343984,
+            "mean_episode_score": 49.40330825249354,
+            "checkpoint": "model_9200.pt",
+            "sha256": "b028c7b272ab318e8559b1067002956353916eccd1cee4840c17a5a6240985e6"
+          },
+          {
+            "training_seed": 46,
+            "label": "PPO_seed46_model_9200",
+            "elapsed_minutes": 327.12082075277965,
+            "mean_episode_score": 48.31360521912575,
+            "checkpoint": "model_9200.pt",
+            "sha256": "a1230b92f99a37816ec2cb4622d97e7bc96f715dbcddfb0702ca4f6e7a885af1"
+          }
+        ],
         "algorithms": {
           "PPO": {
-            "mean_minutes": 117.69982672611873,
-            "sd_minutes": 13.579806485858771,
             "seeds": [
               {
                 "training_seed": 42,
-                "max_validation_mean_episode_score": 50.41655885179838,
-                "threshold_score": 47.89573090920846,
-                "first_reach_seconds": 7726.048855066299,
-                "first_reach_minutes": 128.76748091777165,
-                "score_at_first_reach": 48.396817614634834,
-                "checkpoint": "model_3700.pt",
-                "sha256": "273051e81d1d469b760570ca193c195e336326dfc990741042e9b0bbe38dc141",
-                "previous_observed_seconds": 7310.225889921188,
-                "previous_score": 47.84384133915106,
-                "maximum_gap_minutes": 6.979984617233276
+                "reached": true,
+                "first_reach_minutes": 184.0635222752889,
+                "score_at_first_reach": 49.356433580319084,
+                "checkpoint": "model_5300.pt",
+                "sha256": "52f2a0f9fbc60e32fe4193a49db797a055fc6d8aa521960c1c5f37cc7d86e796",
+                "previous_minutes": 177.1439250389735,
+                "previous_score": 47.864492197831474
               },
               {
                 "training_seed": 43,
-                "max_validation_mean_episode_score": 50.196759045124054,
-                "threshold_score": 47.68692109286785,
-                "first_reach_seconds": 8093.356295347214,
-                "first_reach_minutes": 134.88927158912023,
-                "score_at_first_reach": 47.853031193216644,
-                "checkpoint": "model_3800.pt",
-                "sha256": "7f4b5dc676c4b9c94000e97e0d833352a8b1ae2bae5e30316d9eeffd0c8b78fd",
-                "previous_observed_seconds": 7668.250298500061,
-                "previous_score": 47.532610346873604,
-                "maximum_gap_minutes": 7.157649072011312
+                "reached": true,
+                "first_reach_minutes": 209.2550324479739,
+                "score_at_first_reach": 49.27923717101415,
+                "checkpoint": "model_5900.pt",
+                "sha256": "fc406b220ce2fe6d96dde1d431595f96ebaf5c0d71e0e32481358244889acd0d",
+                "previous_minutes": 202.1788888335228,
+                "previous_score": 48.703304459651314
               },
               {
                 "training_seed": 44,
-                "max_validation_mean_episode_score": 49.92231040199598,
-                "threshold_score": 47.42619488189618,
-                "first_reach_seconds": 6439.091492176056,
-                "first_reach_minutes": 107.3181915362676,
-                "score_at_first_reach": 47.8134940067927,
-                "checkpoint": "model_3000.pt",
-                "sha256": "02f637292f1a88857fd22f06601fe7b50f3317ea314278043c70d0a9762a40f1",
-                "previous_observed_seconds": 6226.262032032013,
-                "previous_score": 47.13171269496282,
-                "maximum_gap_minutes": 7.130644007523855
+                "reached": true,
+                "first_reach_minutes": 238.4427390297254,
+                "score_at_first_reach": 49.66762186090151,
+                "checkpoint": "model_6700.pt",
+                "sha256": "7775151a94bf0904c27cf18128db409f839b3cf36eb438a76c2575b1988ef861",
+                "previous_minutes": 234.89931215445202,
+                "previous_score": 49.085370033979416
               },
               {
                 "training_seed": 45,
-                "max_validation_mean_episode_score": 49.950313617785774,
-                "threshold_score": 47.45279793689648,
-                "first_reach_seconds": 6832.0494556427,
-                "first_reach_minutes": 113.86749092737834,
-                "score_at_first_reach": 47.48412747184435,
-                "checkpoint": "model_3200.pt",
-                "sha256": "a44e0cf16f007f01e850b2924bfaee2460ffe8e7364427b31ecbb7f878d99aa0",
-                "previous_observed_seconds": 6406.826451301575,
-                "previous_score": 46.79623776922623,
-                "maximum_gap_minutes": 7.266614480813344
+                "reached": true,
+                "first_reach_minutes": 163.929379594326,
+                "score_at_first_reach": 49.36384548743566,
+                "checkpoint": "model_4600.pt",
+                "sha256": "a6ff5e204438f0652ad7e1f2cbe63fcf8cf22049b42fac25621e32672ce6d2b8",
+                "previous_minutes": 156.8459631840388,
+                "previous_score": 47.738457918167114
               },
               {
                 "training_seed": 46,
-                "max_validation_mean_episode_score": 49.33894137541453,
-                "threshold_score": 46.8719943066438,
-                "first_reach_seconds": 6219.401919603348,
-                "first_reach_minutes": 103.6566986600558,
-                "score_at_first_reach": 47.60171322027842,
-                "checkpoint": "model_2900.pt",
-                "sha256": "d6f1f129a8d9bb3719b4d19e82c458335cb09f6741fa64b92f9af772fff9f837",
-                "previous_observed_seconds": 5793.1036257743835,
-                "previous_score": 46.693428695201874,
-                "maximum_gap_minutes": 7.153176836172739
+                "reached": true,
+                "first_reach_minutes": 263.4100416223208,
+                "score_at_first_reach": 49.33894137541453,
+                "checkpoint": "model_7400.pt",
+                "sha256": "3b7a10e5ee71bce38318b15db9803195ab4dac976aa324ca84183f473153c78e",
+                "previous_minutes": 259.86245246330895,
+                "previous_score": 48.16977693637212
               }
-            ]
+            ],
+            "reached_seeds": 5,
+            "total_seeds": 5,
+            "mean_minutes": 211.820142993927,
+            "sd_minutes": 40.12734499378544
           },
           "FastSAC": {
-            "mean_minutes": 35.208759495417276,
-            "sd_minutes": 8.299942216309852,
             "seeds": [
               {
                 "training_seed": 42,
-                "max_validation_mean_episode_score": 50.94217737515768,
-                "threshold_score": 48.39506850639979,
-                "first_reach_seconds": 1341.2060158252716,
-                "first_reach_minutes": 22.35343359708786,
-                "score_at_first_reach": 48.5828310350577,
-                "checkpoint": "model_0004000.pt",
-                "sha256": "b2566edc8a96ea426064714a293e55472475c9711ba09bdd5e93dab6e649bd3a",
-                "previous_observed_seconds": 1006.6799113750458,
-                "previous_score": 47.2010990579923,
-                "maximum_gap_minutes": 5.57543507417043
+                "reached": true,
+                "first_reach_minutes": 52.75179731448491,
+                "score_at_first_reach": 49.739003171523414,
+                "checkpoint": "model_0010000.pt",
+                "sha256": "e8cdeb21d8981dcebf96efd0076ed0666f67d4b81f9f35302fb73e5aec6cc4eb",
+                "previous_minutes": 47.68719435532888,
+                "previous_score": 49.02956974506378
               },
               {
                 "training_seed": 43,
-                "max_validation_mean_episode_score": 51.03008708357811,
-                "threshold_score": 48.4785827293992,
-                "first_reach_seconds": 2170.7897040843964,
-                "first_reach_minutes": 36.1798284014066,
-                "score_at_first_reach": 49.10314477110902,
-                "checkpoint": "model_0007000.pt",
-                "sha256": "7d46b6ee0bc38cf383c9dd5fdfb711d4f166f0553dc963de60b1bbf5bdca14d5",
-                "previous_observed_seconds": 1859.3265137672424,
-                "previous_score": 46.910232330982886,
-                "maximum_gap_minutes": 5.20629297097524
+                "reached": true,
+                "first_reach_minutes": 51.74801015853882,
+                "score_at_first_reach": 49.20517155031363,
+                "checkpoint": "model_0010000.pt",
+                "sha256": "9ac4d96d39ed08fc1d45d73e3a6972b705547cd2e1723862db892b2c4ae770ac",
+                "previous_minutes": 46.55839969714483,
+                "previous_score": 47.83242783943812
               },
               {
                 "training_seed": 44,
-                "max_validation_mean_episode_score": 50.91463705897331,
-                "threshold_score": 48.36890520602464,
-                "first_reach_seconds": 2736.79980301857,
-                "first_reach_minutes": 45.6133300503095,
-                "score_at_first_reach": 49.160549322764076,
-                "checkpoint": "model_0009000.pt",
-                "sha256": "b9bc0214663695d591784c547b3a2679f5d2e7d796b5a8616579b13ee7d48bce",
-                "previous_observed_seconds": 2436.332884311676,
-                "previous_score": 47.56915904581547,
-                "maximum_gap_minutes": 5.083422938982646
+                "reached": true,
+                "first_reach_minutes": 70.64972342650096,
+                "score_at_first_reach": 49.45024644955993,
+                "checkpoint": "model_0014000.pt",
+                "sha256": "1c6c8c2750d24fd526f00ae0ce8ec831f1f72e83611f77b11726a58eb96648b0",
+                "previous_minutes": 65.64025402466456,
+                "previous_score": 48.62754518042008
               },
               {
                 "training_seed": 45,
-                "max_validation_mean_episode_score": 51.07961228489876,
-                "threshold_score": 48.525631670653816,
-                "first_reach_seconds": 2154.246332883835,
-                "first_reach_minutes": 35.90410554806392,
-                "score_at_first_reach": 48.65624677141508,
-                "checkpoint": "model_0007000.pt",
-                "sha256": "efc396659541a4ba64a643176064a96d0f8cab1e238601d14d6b78b0549f2ac6",
-                "previous_observed_seconds": 1850.145069360733,
-                "previous_score": 47.0603516921401,
-                "maximum_gap_minutes": 5.125239276885987
+                "reached": true,
+                "first_reach_minutes": 51.079533930619554,
+                "score_at_first_reach": 49.38834592203299,
+                "checkpoint": "model_0010000.pt",
+                "sha256": "4a610c2eda43fd87e6136568c7d66a1ed15f4d25a835d758bbdd72bcc99a54c9",
+                "previous_minutes": 46.018748883406325,
+                "previous_score": 48.58589703217149
               },
               {
                 "training_seed": 46,
-                "max_validation_mean_episode_score": 50.94403303662936,
-                "threshold_score": 48.396831384797885,
-                "first_reach_seconds": 2159.5859928131104,
-                "first_reach_minutes": 35.99309988021851,
-                "score_at_first_reach": 48.68925687670708,
-                "checkpoint": "model_0007000.pt",
-                "sha256": "388ed17e420ee4f96f8564c698b76036440dc9ed18305ef1b6cf4e2e7a95ce01",
-                "previous_observed_seconds": 1854.8625524044037,
-                "previous_score": 48.15376728773117,
-                "maximum_gap_minutes": 5.236891214052836
+                "reached": true,
+                "first_reach_minutes": 61.379493888219194,
+                "score_at_first_reach": 49.24804433186849,
+                "checkpoint": "model_0012000.pt",
+                "sha256": "b3dc492881de51544b19f9cfbb82ccb83c5079dc90d8bdabc35f1446d58d5a84",
+                "previous_minutes": 56.297059098879494,
+                "previous_score": 48.39989811182022
               }
-            ]
+            ],
+            "reached_seeds": 5,
+            "total_seeds": 5,
+            "mean_minutes": 57.52171174367269,
+            "sd_minutes": 8.438254298879041
           }
         },
-        "temporal_resolution": "Five-minute selection grid; saved checkpoint times differ from nominal budgets. First observed attainment, no interpolated crossing.",
-        "time_reduction_percent": 70.08597168341956
+        "source_scores_sha256": "776fcf44321df37b455099a65b03eb2773508b2da58a73de655daf6f73664eb1",
+        "time_reduction_percent": 72.84407850422335
       }
     },
     {
